@@ -91,9 +91,44 @@
     (let [search-results (db-interface/read-active-words)]
         (finish-processing request search-results)))
 
+(defn read-changes-statistic
+    []
+    (db-interface/read-changes-statistic))
+
+(defn read-changes
+    []
+    (db-interface/read-changes))
+
+(defn read-changes-for-user
+    [user-name]
+    (db-interface/read-changes-for-user user-name))
+
 (defn process-user-list
     [request]
-    )
+    (let [changes-statistic (read-changes-statistic)
+          changes           (read-changes)
+          user-name         (get-user-name request)]
+        (println "stat"    changes-statistic)
+        (println "changes" changes)
+        (if user-name
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes))
+                (http-response/set-cookie :user-name user-name {:max-age 36000000})
+                (http-response/content-type "text/html"))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes))
+                (http-response/content-type "text/html")))))
+
+(defn process-user-info
+    [request]
+    (let [params            (:params request)
+          selected-user     (get params "name")
+          changes           (read-changes-for-user selected-user)
+          user-name         (get-user-name request)]
+        (if user-name
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes))
+                (http-response/set-cookie :user-name user-name {:max-age 36000000})
+                (http-response/content-type "text/html"))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes))
+                (http-response/content-type "text/html")))))
 
 ;defn process-delete-word
 ;   [request]
@@ -133,10 +168,11 @@
             "/all-words"         (process-all-words request)
             "/deleted-words"     (process-deleted-words request)
             "/active-words"      (process-active-words  request)
-            ;"/find-words"        (process-find-words    request)
+            ;"/find-words"       (process-find-words    request)
             "/add-words"         (process-add-words     request)
-            "/users"             (process-user-list      request)
-            ;"/delete-word"       (process-delete-word   request)
-            ;"/undelete-word"     (process-undelete-word request)
+            "/users"             (process-user-list     request)
+            "/user"              (process-user-info     request)
+            ;"/delete-word"      (process-delete-word   request)
+            ;"/undelete-word"    (process-undelete-word request)
             )))
 

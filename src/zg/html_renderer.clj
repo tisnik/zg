@@ -144,3 +144,56 @@
         ] ; </body>
     ))
 
+(defn render-users
+    [user-name statistic changes]
+    (page/xhtml
+        (render-html-header nil)
+        [:body
+            [:div {:class "container"}
+                (render-navigation-bar-section nil user-name)
+
+                [:table {:class "table table-stripped table-hover" :style "width:auto"}
+                    [:tr [:th "User name"]
+                         [:th "Changes made"]]
+                    (for [stat statistic]
+                        [:tr [:td [:a {:href (str "user?name=" (:user stat))} (:user stat)]]
+                             [:td (:cnt stat)]]
+                    )
+                ]
+                [:br]
+                [:table {:class "table table-stripped table-hover" :style "width:auto"}
+                    [:tr [:th "Word"]
+                         [:th "Added at"]
+                         [:th "Added by"]]
+                    (for [change changes]
+                        [:tr [:td (:word change)]
+                             [:td (:datetime change)]
+                             [:td [:a {:href (str "user?name=" (:user change))} (:user change)]]])
+                ]
+                (render-html-footer)
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
+(defn render-user-info
+    [user-name changes]
+    (page/xhtml
+        (render-html-header nil)
+        [:body
+            [:div {:class "container"}
+                (render-navigation-bar-section nil user-name)
+                [:h1 (str "Changes made by " user-name)]
+
+                [:br]
+                [:table {:class "table table-stripped table-hover" :style "width:auto"}
+                    [:tr [:th "Word"]
+                         [:th "Added at"]]
+                    (for [change changes]
+                        [:tr [:td (:word change)]
+                             [:td (:datetime change)]])
+                ]
+                (render-html-footer)
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
