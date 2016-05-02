@@ -86,3 +86,30 @@
     []
     (read-words-with-status :undeleted))
 
+(defn read-changes-statistic
+    []
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select user, count(*) as cnt from dictionary group by user order by cnt desc"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-changes
+    []
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select * from dictionary order by datetime"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-changes-for-user
+    [user-name]
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select * from dictionary where user=? order by datetime" user-name])
+        (catch Exception e
+            (println e)
+            [])))
+
