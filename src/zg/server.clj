@@ -12,14 +12,37 @@
     (.write *out* (str (clojure.string/join " " more) "\n"))
     (flush))
 
-(defn process-front-page
-    [request]
-    (let [word (-> (:params request) (get "word"))
-          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+(defn get-user-name
+    [new-user-name old-user-name]
+    (or new-user-name old-user-name))
+
+(defn finish-processing
+    [request search-results]
+    (let [params        (:params request)
+          cookies       (:cookies request)
+          word          (get params "word")
+          new-user-name (get params "user-name")
+          old-user-name (get (get cookies "user-name") :value)
+          user-name     (get-user-name new-user-name old-user-name)]
+        (println-and-flush "Incoming cookies: " cookies)
+        (println "old" old-user-name)
+        (println "new" new-user-name)
+        (println "-> " user-name)
         (println word)
         (println search-results)
-        (-> (http-response/response (html-renderer/render-front-page word search-results))
-            (http-response/content-type "text/html"))))
+        (if user-name
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results))
+                (http-response/set-cookie :user-name user-name {:max-age 36000000})
+                (http-response/content-type "text/html"))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results))
+                (http-response/content-type "text/html")))))
+
+(defn process-front-page
+    [request]
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+        (finish-processing request search-results)))
 
 (defn store-words
     [words]
@@ -33,8 +56,7 @@
           words (if input (clojure.string/split input #"[\s,]"))]
           (if words
               (store-words words))
-        (-> (http-response/response (html-renderer/render-front-page nil nil))
-            (http-response/content-type "text/html"))))
+        (finish-processing request nil)))
 
 (defn perform-operation
     [request]
@@ -51,25 +73,19 @@
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-all-words)]
-        (println search-results)
-        (-> (http-response/response (html-renderer/render-front-page nil search-results))
-            (http-response/content-type "text/html"))))
+        (finish-processing request search-results)))
 
 (defn process-deleted-words
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-deleted-words)]
-        (println search-results)
-        (-> (http-response/response (html-renderer/render-front-page nil search-results))
-            (http-response/content-type "text/html"))))
+        (finish-processing request search-results)))
 
 (defn process-active-words
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
-        (println search-results)
-        (-> (http-response/response (html-renderer/render-front-page nil search-results))
-            (http-response/content-type "text/html"))))
+        (finish-processing request search-results)))
 
 ;defn process-delete-word
 ;   [request]
