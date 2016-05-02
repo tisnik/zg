@@ -34,9 +34,19 @@
             [:div {:class "input-group-btn"}
                 (form/submit-button {:class "btn btn-default"} "Search")]]))
 
+(defn render-name-field
+    "Renders box for typing user name on the top side of HTML page."
+    [user-name]
+    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get "/" ]
+        [:div {:class "input-group"}
+            ;[:span {:class "input-group-addon"} "Name"]
+            (form/text-field {:size "10" :class "form-control" :placeholder "User name"} "user-name" (str user-name))
+            [:div {:class "input-group-btn"}
+                (form/submit-button {:class "btn btn-default"} "Remember me")]]))
+
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
-    [word]
+    [word user-name]
     [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"}
         [:div {:class "container-fluid"}
             [:div {:class "row"}
@@ -59,18 +69,26 @@
                         [:a {:href "/deleted-words" :class "navbar-brand"} "Deleted words"]
                     ] ; ./navbar-header
                 ] ; col ends
+                [:div {:class "col-md-3"}
+                    (render-name-field user-name)
+                ]
+                [:div {:class "col-md-1"}
+                    [:div {:class "navbar-header"}
+                        [:a {:href "/users" :class "navbar-brand"} "Users"]
+                    ] ; ./navbar-header
+                ] ; col ends
             ] ; row ends
         ] ; /.container-fluid
 ]); </nav>
 
 (defn render-error-page
     "Render error page with a 'back' button."
-    [word message]
+    [word user-name message]
     (page/xhtml
         (render-html-header "")
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word)
+                (render-navigation-bar-section word user-name)
                 [:div {:class "col-md-10"}
                     [:h2 "Sorry, error occured in zg"]
                     [:p message]
@@ -83,12 +101,12 @@
     ))
 
 (defn render-front-page
-    [word search-results]
+    [word user-name search-results]
     (page/xhtml
         (render-html-header word)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word)
+                (render-navigation-bar-section word user-name)
 
                 (form/form-to [:post "/add-words"]
                         [:div {:class "label label-primary"} "New words"]
