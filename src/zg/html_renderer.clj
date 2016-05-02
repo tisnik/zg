@@ -8,7 +8,7 @@
     "Renders part of HTML page - the header."
     [package]
     [:head
-        [:title "zg   " package]
+        [:title "zg" package]
         [:meta {:name "Author"    :content "Pavel Tisnovsky"}]
         [:meta {:name "Generator" :content "Clojure"}]
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
@@ -50,15 +50,15 @@
     [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"}
         [:div {:class "container-fluid"}
             [:div {:class "row"}
-                [:div {:class "col-md-2"}
+                [:div {:class "col-md-1"}
                     [:div {:class "navbar-header"}
                         [:a {:href "/" :class "navbar-brand"} "zg"]
                     ] ; ./navbar-header
                 ] ; col ends
-                [:div {:class "col-md-4"}
+                [:div {:class "col-md-3"}
                     (render-search-field word)
                 ] ; col ends
-                [:div {:class "col-md-4"}
+                [:div {:class "col-md-3"}
                     [:div {:class "navbar-header"}
                         [:a {:href "/all-words" :class "navbar-brand"} "All words"]
                     ] ; ./navbar-header
