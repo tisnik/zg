@@ -19,12 +19,12 @@
 (require '[zg.format-date :as format-date])
 
 (defn add-new-word-into-dictionary
-    [word]
+    [word user-name]
     (let [datetime (format-date/format-current-date)]
         (println "storing" datetime word)
         (try
             (jdbc/insert! db-spec/zg-db
-                          :dictionary {:word word :datetime datetime :deleted 0})
+                          :dictionary {:word word :user user-name :datetime datetime :deleted 0})
             (catch Exception e
                 (println e)))))
 
