@@ -125,6 +125,7 @@
                     [:table {:class "table table-stripped table-hover" :style "width:auto"}
                         [:tr [:th "Word"]
                              [:th "Added at"]
+                             [:th "Added by"]
                              [:th "Status"]
                              [:th "Operation"]]
                         (for [search-result search-results]
@@ -132,6 +133,7 @@
                                   word    (:word search-result)]
                                 [:tr [:td word]
                                      [:td (:datetime search-result)]
+                                     [:td (:user search-result)]
                                      [:td (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-success"} "undelete"]
                                                       [:a {:href (str "?delete=" word)   :class "btn btn-danger"}  "delete"])]

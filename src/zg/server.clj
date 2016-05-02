@@ -13,21 +13,24 @@
     (flush))
 
 (defn get-user-name
-    [new-user-name old-user-name]
-    (or new-user-name old-user-name))
+    [request]
+    (let [params        (:params request)
+          cookies       (:cookies request)
+          new-user-name (get params "user-name")
+          old-user-name (get (get cookies "user-name") :value)
+          user-name     (or new-user-name old-user-name)]
+        (println "old" old-user-name)
+        (println "new" new-user-name)
+        (println "-> " user-name)
+        user-name))
 
 (defn finish-processing
     [request search-results]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
-          new-user-name (get params "user-name")
-          old-user-name (get (get cookies "user-name") :value)
-          user-name     (get-user-name new-user-name old-user-name)]
+          user-name     (get-user-name request)]
         (println-and-flush "Incoming cookies: " cookies)
-        (println "old" old-user-name)
-        (println "new" new-user-name)
-        (println "-> " user-name)
         (println word)
         (println search-results)
         (if user-name
@@ -45,17 +48,18 @@
         (finish-processing request search-results)))
 
 (defn store-words
-    [words]
+    [words user-name]
     (println "About to store following words:" words)
     (doseq [word words]
-        (db-interface/add-new-word-into-dictionary word)))
+        (db-interface/add-new-word-into-dictionary word user-name)))
 
 (defn process-add-words
     [request]
     (let [input (-> (:params request) (get "new-words"))
-          words (if input (clojure.string/split input #"[\s,]"))]
+          words (if input (clojure.string/split input #"[\s,]"))
+          user-name (get-user-name request)]
           (if words
-              (store-words words))
+              (store-words words user-name))
         (finish-processing request nil)))
 
 (defn perform-operation
@@ -86,6 +90,10 @@
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
         (finish-processing request search-results)))
+
+(defn process-user-list
+    [request]
+    )
 
 ;defn process-delete-word
 ;   [request]
@@ -127,6 +135,7 @@
             "/active-words"      (process-active-words  request)
             ;"/find-words"        (process-find-words    request)
             "/add-words"         (process-add-words     request)
+            "/users"             (process-user-list      request)
             ;"/delete-word"       (process-delete-word   request)
             ;"/undelete-word"     (process-undelete-word request)
             )))
