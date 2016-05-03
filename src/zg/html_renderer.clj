@@ -101,7 +101,7 @@
     ))
 
 (defn render-front-page
-    [word user-name search-results]
+    [word user-name search-results message]
     (page/xhtml
         (render-html-header word)
         [:body
@@ -121,6 +121,9 @@
 
                         [:br]
                         [:br]
+                (if message
+                    [:div {:class "label label-warning"} message ]
+                )
                 (if search-results
                     [:table {:class "table table-stripped table-hover" :style "width:auto"}
                         [:tr [:th "Word"]
