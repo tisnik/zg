@@ -6,9 +6,9 @@
 
 (defn render-html-header
     "Renders part of HTML page - the header."
-    [word url-prefix]
+    [word url-prefix zw-mode]
     [:head
-        [:title "zg " word]
+        [:title (if zw-mode "zw " "zg ") word]
         [:meta {:name "Author"    :content "Pavel Tisnovsky"}]
         [:meta {:name "Generator" :content "Clojure"}]
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
@@ -46,13 +46,13 @@
 
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
-    [word user-name url-prefix]
+    [word user-name url-prefix zw-mode]
     [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"}
         [:div {:class "container-fluid"}
             [:div {:class "row"}
                 [:div {:class "col-md-1"}
                     [:div {:class "navbar-header"}
-                        [:a {:href url-prefix :class "navbar-brand"} "zg"]
+                        [:a {:href url-prefix :class "navbar-brand"} (if zw-mode "zw" "zg")]
                     ] ; ./navbar-header
                 ] ; col ends
                 [:div {:class "col-md-3"}
@@ -85,10 +85,10 @@
     "Render error page with a 'back' button."
     [word user-name message url-prefix]
     (page/xhtml
-        (render-html-header "" url-prefix)
+        (render-html-header "" url-prefix nil) ; TODO change
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name url-prefix)
+                (render-navigation-bar-section word user-name url-prefix nil); TODO change
                 [:div {:class "col-md-10"}
                     [:h2 "Sorry, error occured in zg"]
                     [:p message]
@@ -101,12 +101,12 @@
     ))
 
 (defn render-front-page
-    [word user-name search-results message url-prefix]
+    [word user-name search-results message url-prefix zw-mode]
     (page/xhtml
-        (render-html-header word url-prefix)
+        (render-html-header word url-prefix zw-mode)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name url-prefix)
+                (render-navigation-bar-section word user-name url-prefix zw-mode)
 
                 (form/form-to [:post (str url-prefix "add-words")]
                         [:div {:class "label label-primary"} "New words"]
@@ -129,6 +129,8 @@
                         [:tr [:th "Word"]
                              [:th "Added at"]
                              [:th "Added by"]
+                             (if zw-mode
+                                 [:th "Description"])
                              [:th "Status"]
                              [:th "Operation"]]
                         (for [search-result search-results]
@@ -137,9 +139,11 @@
                                 [:tr [:td word]
                                      [:td (:datetime search-result)]
                                      [:td (:user search-result)]
+                                     (if zw-mode
+                                         [:td (:description search-result)])
                                      [:td (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-success"} "undelete"]
-                                                      [:a {:href (str "?delete=" word)   :class "btn btn-danger"}  "delete"])]
+                                                      [:a {:href (str "?delete="   word) :class "btn btn-danger"}  "delete"])]
                                 ]))
                     ])
                 (render-html-footer)
@@ -148,12 +152,12 @@
     ))
 
 (defn render-users
-    [user-name statistic changes url-prefix]
+    [user-name statistic changes url-prefix zw-mode]
     (page/xhtml
-        (render-html-header nil url-prefix)
+        (render-html-header nil url-prefix zw-mode)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name url-prefix)
+                (render-navigation-bar-section nil user-name url-prefix zw-mode)
 
                 [:table {:class "table table-stripped table-hover" :style "width:auto"}
                     [:tr [:th "User name"]
@@ -179,12 +183,12 @@
     ))
 
 (defn render-user-info
-    [user-name changes url-prefix]
+    [user-name changes url-prefix zw-mode]
     (page/xhtml
-        (render-html-header nil url-prefix)
+        (render-html-header nil url-prefix zw-mode)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name url-prefix)
+                (render-navigation-bar-section nil user-name url-prefix zw-mode)
                 [:h1 (str "Changes made by " user-name)]
 
                 [:br]
