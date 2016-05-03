@@ -25,7 +25,7 @@
         user-name))
 
 (defn finish-processing
-    [request search-results]
+    [request search-results message]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
@@ -34,10 +34,10 @@
         (println word)
         (println search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
@@ -45,7 +45,7 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
-        (finish-processing request search-results)))
+        (finish-processing request search-results nil)))
 
 (defn store-words
     [words user-name]
@@ -53,14 +53,27 @@
     (doseq [word words]
         (db-interface/add-new-word-into-dictionary word user-name)))
 
+(defn add-words-message
+    [words]
+    (if (seq words)
+        (str "The following words have been added into the dictionary: '" (clojure.string/join "," words) "'. Thank you!")
+        "No words have been added..."))
+
+(defn split-words
+    [input]
+    (if input
+        (->> (clojure.string/split input #"[\s,]")
+             (filter seq))))
+
 (defn process-add-words
     [request]
-    (let [input (-> (:params request) (get "new-words"))
-          words (if input (clojure.string/split input #"[\s,]"))
-          user-name (get-user-name request)]
-          (if words
+    (let [input     (-> (:params request) (get "new-words"))
+          words     (split-words input)
+          user-name (get-user-name request)
+          message   (add-words-message words)]
+          (if (seq words)
               (store-words words user-name))
-        (finish-processing request nil)))
+        (finish-processing request nil message)))
 
 (defn perform-operation
     [request]
@@ -77,19 +90,19 @@
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-all-words)]
-        (finish-processing request search-results)))
+        (finish-processing request search-results nil)))
 
 (defn process-deleted-words
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-deleted-words)]
-        (finish-processing request search-results)))
+        (finish-processing request search-results nil)))
 
 (defn process-active-words
     [request]
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
-        (finish-processing request search-results)))
+        (finish-processing request search-results nil)))
 
 (defn read-changes-statistic
     []
