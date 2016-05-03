@@ -101,7 +101,7 @@
     ))
 
 (defn render-front-page
-    [word user-name search-results message]
+    [word user-name search-results message url-prefix]
     (page/xhtml
         (render-html-header word)
         [:body
@@ -148,7 +148,7 @@
     ))
 
 (defn render-users
-    [user-name statistic changes]
+    [user-name statistic changes url-prefix]
     (page/xhtml
         (render-html-header nil)
         [:body
@@ -179,7 +179,7 @@
     ))
 
 (defn render-user-info
-    [user-name changes]
+    [user-name changes url-prefix]
     (page/xhtml
         (render-html-header nil)
         [:body

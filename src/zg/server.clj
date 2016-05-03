@@ -24,20 +24,27 @@
         (println "-> " user-name)
         user-name))
 
+(defn get-url-prefix
+    [request]
+    (-> (:configuration request)
+        :server
+        :url-prefix))
+
 (defn finish-processing
     [request search-results message]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
-          user-name     (get-user-name request)]
+          user-name     (get-user-name request)
+          url-prefix    (get-url-prefix request)]
         (println-and-flush "Incoming cookies: " cookies)
         (println word)
         (println search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
@@ -120,14 +127,15 @@
     [request]
     (let [changes-statistic (read-changes-statistic)
           changes           (read-changes)
-          user-name         (get-user-name request)]
+          user-name         (get-user-name request)
+          url-prefix        (get-url-prefix request)]
         (println "stat"    changes-statistic)
         (println "changes" changes)
         (if user-name
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix))
                 (http-response/content-type "text/html")))))
 
 (defn process-user-info
@@ -135,12 +143,13 @@
     (let [params            (:params request)
           selected-user     (get params "name")
           changes           (read-changes-for-user selected-user)
-          user-name         (get-user-name request)]
+          user-name         (get-user-name request)
+          url-prefix        (get-url-prefix request)]
         (if user-name
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix))
                 (http-response/content-type "text/html")))))
 
 ;defn process-delete-word
