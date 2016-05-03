@@ -108,7 +108,7 @@
             [:div {:class "container"}
                 (render-navigation-bar-section word user-name url-prefix)
 
-                (form/form-to [:post "/add-words"]
+                (form/form-to [:post (str url-prefix "add-words")]
                         [:div {:class "label label-primary"} "New words"]
                         "&nbsp;"
                         [:div {:class "label label-warning"} "(please use spaces or commas as separators)"]

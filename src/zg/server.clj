@@ -1,6 +1,8 @@
 (ns zg.server)
 
 (require '[ring.util.response     :as http-response])
+(require '[clojure.data.json      :as json])
+(require '[clojure.xml            :as xml])
 
 (require '[zg.db-interface        :as db-interface])
 (require '[zg.html-renderer       :as html-renderer])
@@ -152,6 +154,17 @@
             (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix))
                 (http-response/content-type "text/html")))))
 
+(defn words->json
+    [words]
+    (json/write-str words))
+
+(defn process-wordlist-json
+    [request]
+    (let [search-results (db-interface/read-all-words)
+          json-output    (words->json search-results)]
+        (-> (http-response/response json-output)
+            (http-response/content-type "application/json"))))
+
 ;defn process-delete-word
 ;   [request]
 ;   )
@@ -194,6 +207,7 @@
             "/add-words"         (process-add-words     request)
             "/users"             (process-user-list     request)
             "/user"              (process-user-info     request)
+            "/wordlist/json"     (process-wordlist-json request)
             ;"/delete-word"      (process-delete-word   request)
             ;"/undelete-word"    (process-undelete-word request)
             )))
