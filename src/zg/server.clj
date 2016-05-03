@@ -63,11 +63,22 @@
           search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
         (finish-processing request search-results nil zw-mode)))
 
+(defn store-word
+    [word description user-name]
+    (println "About to store following word:" word " with description: " description)
+    (db-interface/add-new-word-into-dictionary word description user-name))
+
 (defn store-words
     [words user-name]
     (println "About to store following words:" words)
     (doseq [word words]
         (db-interface/add-new-word-into-dictionary word user-name)))
+
+(defn add-word-message
+    [word]
+    (if (seq word)
+        (str "The following word has been added into the dictionary: '" word "'. Thank you!")
+        "No word has been added..."))
 
 (defn add-words-message
     [words]
@@ -83,7 +94,13 @@
 
 (defn process-add-word
     [request]
-    )
+    (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
+          description (-> (:params request) (get "description") clojure.string/trim)
+          user-name (get-user-name request)
+          message   (add-word-message word)]
+          (if (seq word)
+              (store-word word description user-name))
+        (finish-processing request nil message true))) ; in zw mode every time!
 
 (defn process-add-words
     [request]
