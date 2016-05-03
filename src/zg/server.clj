@@ -158,12 +158,23 @@
     [words]
     (json/write-str words))
 
+(defn words->text
+    [words]
+    (clojure.string/join "\n" words))
+
 (defn process-wordlist-json
     [request]
     (let [search-results (db-interface/read-all-words)
           json-output    (words->json search-results)]
         (-> (http-response/response json-output)
             (http-response/content-type "application/json"))))
+
+(defn process-wordlist-text
+    [request]
+    (let [search-results (db-interface/read-all-words)
+          text-output    (words->text search-results)]
+        (-> (http-response/response text-output)
+            (http-response/content-type "text/plain"))))
 
 ;defn process-delete-word
 ;   [request]
@@ -208,6 +219,7 @@
             "/users"             (process-user-list     request)
             "/user"              (process-user-info     request)
             "/wordlist/json"     (process-wordlist-json request)
+            "/wordlist/text"     (process-wordlist-text request)
             ;"/delete-word"      (process-delete-word   request)
             ;"/undelete-word"    (process-undelete-word request)
             )))
