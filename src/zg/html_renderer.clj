@@ -6,16 +6,16 @@
 
 (defn render-html-header
     "Renders part of HTML page - the header."
-    [package]
+    [word url-prefix]
     [:head
-        [:title "zg" package]
+        [:title "zg " word]
         [:meta {:name "Author"    :content "Pavel Tisnovsky"}]
         [:meta {:name "Generator" :content "Clojure"}]
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
         ;(page/include-css "http://torment.usersys.redhat.com/openjdk/style.css")]
-        (page/include-css "bootstrap.min.css")
-        (page/include-css "smearch.css")
-        (page/include-js  "bootstrap.min.js")
+        (page/include-css (str url-prefix "bootstrap.min.css"))
+        (page/include-css (str url-prefix "smearch.css"))
+        (page/include-js  (str url-prefix "bootstrap.min.js"))
     ] ; head
 )
 
@@ -26,8 +26,8 @@
 
 (defn render-search-field
     "Renders search box on the top side of HTML page."
-    [word]
-    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get "/" ]
+    [word url-prefix]
+    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get url-prefix ]
         [:div {:class "input-group"}
             [:span {:class "input-group-addon"} "Search"]
             (form/text-field {:size "40" :class "form-control" :placeholder "Search for word"} "word" (str word))
@@ -36,8 +36,8 @@
 
 (defn render-name-field
     "Renders box for typing user name on the top side of HTML page."
-    [user-name]
-    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get "/" ]
+    [user-name url-prefix]
+    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get url-prefix ]
         [:div {:class "input-group"}
             ;[:span {:class "input-group-addon"} "Name"]
             (form/text-field {:size "10" :class "form-control" :placeholder "User name"} "user-name" (str user-name))
@@ -46,35 +46,35 @@
 
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
-    [word user-name]
+    [word user-name url-prefix]
     [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"}
         [:div {:class "container-fluid"}
             [:div {:class "row"}
                 [:div {:class "col-md-1"}
                     [:div {:class "navbar-header"}
-                        [:a {:href "/" :class "navbar-brand"} "zg"]
+                        [:a {:href url-prefix :class "navbar-brand"} "zg"]
                     ] ; ./navbar-header
                 ] ; col ends
                 [:div {:class "col-md-3"}
-                    (render-search-field word)
+                    (render-search-field word url-prefix)
                 ] ; col ends
                 [:div {:class "col-md-3"}
                     [:div {:class "navbar-header"}
-                        [:a {:href "/all-words" :class "navbar-brand"} "All words"]
+                        [:a {:href (str url-prefix "all-words") :class "navbar-brand"} "All words"]
                     ] ; ./navbar-header
                     [:div {:class "navbar-header"}
-                        [:a {:href "/active-words" :class "navbar-brand"} "Active words"]
+                        [:a {:href (str url-prefix "active-words") :class "navbar-brand"} "Active words"]
                     ] ; ./navbar-header
                     [:div {:class "navbar-header"}
-                        [:a {:href "/deleted-words" :class "navbar-brand"} "Deleted words"]
+                        [:a {:href (str url-prefix "deleted-words") :class "navbar-brand"} "Deleted words"]
                     ] ; ./navbar-header
                 ] ; col ends
                 [:div {:class "col-md-3"}
-                    (render-name-field user-name)
+                    (render-name-field user-name url-prefix)
                 ]
                 [:div {:class "col-md-1"}
                     [:div {:class "navbar-header"}
-                        [:a {:href "/users" :class "navbar-brand"} "Users"]
+                        [:a {:href (str url-prefix "users") :class "navbar-brand"} "Users"]
                     ] ; ./navbar-header
                 ] ; col ends
             ] ; row ends
@@ -83,12 +83,12 @@
 
 (defn render-error-page
     "Render error page with a 'back' button."
-    [word user-name message]
+    [word user-name message url-prefix]
     (page/xhtml
-        (render-html-header "")
+        (render-html-header "" url-prefix)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name)
+                (render-navigation-bar-section word user-name url-prefix)
                 [:div {:class "col-md-10"}
                     [:h2 "Sorry, error occured in zg"]
                     [:p message]
@@ -103,10 +103,10 @@
 (defn render-front-page
     [word user-name search-results message url-prefix]
     (page/xhtml
-        (render-html-header word)
+        (render-html-header word url-prefix)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name)
+                (render-navigation-bar-section word user-name url-prefix)
 
                 (form/form-to [:post "/add-words"]
                         [:div {:class "label label-primary"} "New words"]
@@ -150,10 +150,10 @@
 (defn render-users
     [user-name statistic changes url-prefix]
     (page/xhtml
-        (render-html-header nil)
+        (render-html-header nil url-prefix)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name)
+                (render-navigation-bar-section nil user-name url-prefix)
 
                 [:table {:class "table table-stripped table-hover" :style "width:auto"}
                     [:tr [:th "User name"]
@@ -181,10 +181,10 @@
 (defn render-user-info
     [user-name changes url-prefix]
     (page/xhtml
-        (render-html-header nil)
+        (render-html-header nil url-prefix)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name)
+                (render-navigation-bar-section nil user-name url-prefix)
                 [:h1 (str "Changes made by " user-name)]
 
                 [:br]
