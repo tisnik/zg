@@ -9,6 +9,7 @@
 
 (require '[zg.server               :as server])
 (require '[zg.config               :as config])
+(require '[zg.middleware           :as middleware])
 
 (def default-port
     "3000")
@@ -18,9 +19,13 @@
     ;; an option with a required argument
     [["-p" "--port   PORT"    "port number"   :id :port]])
 
+; we need to load the configuration in advance so the 'app' could use it
+(def configuration (config/load-configuration "zg.ini"))
+
 (def app
     "Definition of a Ring-based application behaviour."
     (-> server/handler            ; handle all events
+        (middleware/inject-configuration configuration) ; inject configuration structure into the parameter
         cookies/wrap-cookies      ; we need to work with cookies
         http-params/wrap-params)) ; and to process request parameters, of course
 
@@ -51,9 +56,8 @@
     [& args]
     (let [all-options      (cli/parse-opts args cli-options)
           options          (all-options :options)
-          port             (options :port)
-          config           (config/load-configuration "zg.ini")]
-          (config/print-configuration config)
+          port             (options :port)]
+          (config/print-configuration configuration)
           (start-server    (get-port port))))
 
 ; finito
