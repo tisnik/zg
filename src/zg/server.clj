@@ -162,6 +162,16 @@
     [words]
     (clojure.string/join "\n" words))
 
+(defn words->xml
+    [words]
+    (with-out-str
+        (xml/emit {:tag :whitelist :content (for [word words]
+                                             {:tag :word :attrs {
+                                                             :added-by     (:user word)
+                                                             :date-time (:datetime word)
+                                                             :deleted  (:deleted word)}
+                                                             :content  [(:word word)]})})))
+
 (defn process-wordlist-json
     [request]
     (let [search-results (db-interface/read-all-words)
@@ -175,6 +185,13 @@
           text-output    (words->text search-results)]
         (-> (http-response/response text-output)
             (http-response/content-type "text/plain"))))
+
+(defn process-wordlist-xml
+    [request]
+    (let [search-results (db-interface/read-all-words)
+          xml-output     (words->xml search-results)]
+        (-> (http-response/response xml-output)
+            (http-response/content-type "text/xml"))))
 
 ;defn process-delete-word
 ;   [request]
@@ -220,6 +237,7 @@
             "/user"              (process-user-info     request)
             "/wordlist/json"     (process-wordlist-json request)
             "/wordlist/text"     (process-wordlist-text request)
+            "/wordlist/xml"      (process-wordlist-xml  request)
             ;"/delete-word"      (process-delete-word   request)
             ;"/undelete-word"    (process-undelete-word request)
             )))
