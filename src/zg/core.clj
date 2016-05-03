@@ -8,6 +8,7 @@
 (require '[clojure.tools.cli       :as cli])
 
 (require '[zg.server               :as server])
+(require '[zg.config               :as config])
 
 (def default-port
     "3000")
@@ -50,7 +51,9 @@
     [& args]
     (let [all-options      (cli/parse-opts args cli-options)
           options          (all-options :options)
-          port             (options :port)]
+          port             (options :port)
+          config           (config/load-configuration "zg.ini")]
+          (config/print-configuration config)
           (start-server    (get-port port))))
 
 ; finito
