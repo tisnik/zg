@@ -26,6 +26,13 @@
         (println "-> " user-name)
         user-name))
 
+(defn zw-mode?
+    [request]
+    (-> (:configuration request)
+        :server
+        :mode
+        (= "zw")))
+
 (defn get-url-prefix
     [request]
     (-> (:configuration request)
@@ -33,7 +40,7 @@
         :url-prefix))
 
 (defn finish-processing
-    [request search-results message]
+    [request search-results message zw-mode]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
@@ -43,18 +50,18 @@
         (println word)
         (println search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix zw-mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix zw-mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
-    [request]
+    [request zw-mode]
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
-        (finish-processing request search-results nil)))
+        (finish-processing request search-results nil zw-mode)))
 
 (defn store-words
     [words user-name]
@@ -74,6 +81,10 @@
         (->> (clojure.string/split input #"[\s,]")
              (filter seq))))
 
+(defn process-add-word
+    [request]
+    )
+
 (defn process-add-words
     [request]
     (let [input     (-> (:params request) (get "new-words"))
@@ -82,7 +93,7 @@
           message   (add-words-message words)]
           (if (seq words)
               (store-words words user-name))
-        (finish-processing request nil message)))
+        (finish-processing request nil message nil)))
 
 (defn perform-operation
     [request]
@@ -96,22 +107,22 @@
               (db-interface/undelete-word to-undelete))))
 
 (defn process-all-words
-    [request]
+    [request zw-mode]
     (perform-operation request)
     (let [search-results (db-interface/read-all-words)]
-        (finish-processing request search-results nil)))
+        (finish-processing request search-results nil zw-mode)))
 
 (defn process-deleted-words
-    [request]
+    [request zw-mode]
     (perform-operation request)
     (let [search-results (db-interface/read-deleted-words)]
-        (finish-processing request search-results nil)))
+        (finish-processing request search-results nil zw-mode)))
 
 (defn process-active-words
-    [request]
+    [request zw-mode]
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
-        (finish-processing request search-results nil)))
+        (finish-processing request search-results nil zw-mode)))
 
 (defn read-changes-statistic
     []
@@ -126,7 +137,7 @@
     (db-interface/read-changes-for-user user-name))
 
 (defn process-user-list
-    [request]
+    [request zw-mode]
     (let [changes-statistic (read-changes-statistic)
           changes           (read-changes)
           user-name         (get-user-name request)
@@ -134,24 +145,24 @@
         (println "stat"    changes-statistic)
         (println "changes" changes)
         (if user-name
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix zw-mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix zw-mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-user-info
-    [request]
+    [request zw-mode]
     (let [params            (:params request)
           selected-user     (get params "name")
           changes           (read-changes-for-user selected-user)
           user-name         (get-user-name request)
           url-prefix        (get-url-prefix request)]
         (if user-name
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix zw-mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix zw-mode))
                 (http-response/content-type "text/html")))))
 
 (defn words->json
@@ -168,9 +179,10 @@
         (xml/emit {:tag :whitelist :content (for [word words]
                                              {:tag :word :attrs {
                                                              :added-by     (:user word)
-                                                             :date-time (:datetime word)
-                                                             :deleted  (:deleted word)}
-                                                             :content  [(:word word)]})})))
+                                                             :date-time    (:datetime word)
+                                                             :deleted      (:deleted word)
+                                                             :description  (:description word)}
+                                                             :content      [(:word word)]})})))
 
 (defn process-wordlist-json
     [request]
@@ -221,20 +233,22 @@
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
     (println-and-flush "request URI: " (request :uri))
-    (let [uri (request :uri)]
+    (let [uri     (request :uri)
+          zw-mode (zw-mode? request)]
         (condp = uri
             "/favicon.ico"       (return-file "favicon.ico" "image/x-icon")
             "/bootstrap.min.css" (return-file "bootstrap.min.css" "text/css")
             "/smearch.css"       (return-file "smearch.css" "text/css")
             "/bootstrap.min.js"  (return-file "bootstrap.min.js" "application/javascript")
-            "/"                  (process-front-page request)
-            "/all-words"         (process-all-words request)
-            "/deleted-words"     (process-deleted-words request)
-            "/active-words"      (process-active-words  request)
+            "/"                  (process-front-page    request zw-mode)
+            "/all-words"         (process-all-words     request zw-mode)
+            "/deleted-words"     (process-deleted-words request zw-mode)
+            "/active-words"      (process-active-words  request zw-mode)
+            "/add-word"          (process-add-word      request)
             ;"/find-words"       (process-find-words    request)
             "/add-words"         (process-add-words     request)
-            "/users"             (process-user-list     request)
-            "/user"              (process-user-info     request)
+            "/users"             (process-user-list     request zw-mode)
+            "/user"              (process-user-info     request zw-mode)
             "/wordlist/json"     (process-wordlist-json request)
             "/wordlist/text"     (process-wordlist-text request)
             "/wordlist/xml"      (process-wordlist-xml  request)
