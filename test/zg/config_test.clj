@@ -11,3 +11,12 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions
+;
+
+(deftest test-parse-int-existence
+    "Check that the zg.config/parse-int definition exists."
+    (testing "if the zg.config/parse-int definition exists."
+        (is (callable? 'zg.config/parse-int))))
+
