@@ -188,7 +188,9 @@
 
 (defn words->text
     [words]
-    (clojure.string/join "\n" words))
+    (->> (for [word words :when (= (:deleted word) 0)]
+             (str (:word word) "\t" (:description word)))
+         (clojure.string/join "\n")))
 
 (defn words->xml
     [words]
