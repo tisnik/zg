@@ -89,3 +89,16 @@
     "Check the behaviour of function zg.config/parse int."
     (is (= Integer/MAX_VALUE (parse-int "2147483647"))))
 
+(deftest test-parse-int-overflow
+    "Check the behaviour of function zg.config/parse int."
+    (are [x] (thrown? NumberFormatException x)
+        (parse-int "2147483648")
+        (parse-int "-2147483649")))
+
+(deftest test-parse-int-bad-input
+    "Check the behaviour of function zg.config/parse int."
+    (are [x] (thrown? NumberFormatException x)
+        (parse-int "")
+        (parse-int "xyzzy")
+        (parse-int "+1")))
+
