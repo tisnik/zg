@@ -20,3 +20,22 @@
     (testing "if the zg.config/parse-int definition exists."
         (is (callable? 'zg.config/parse-int))))
 
+(deftest test-parse-float-existence
+    "Check that the zg.config/parse-float definition exists."
+    (testing "if the zg.config/parse-float definition exists."
+        (is (callable? 'zg.config/parse-float))))
+
+(deftest test-load-configuration-existence
+    "Check that the zg.config/load-configuration definition exists."
+    (testing "if the zg.config/load-configuration definition exists."
+        (is (callable? 'zg.config/load-configuration))))
+
+(deftest test-print-configuration-existence
+    "Check that the zg.config/print-configuration definition exists."
+    (testing "if the zg.config/print-configuration definition exists."
+        (is (callable? 'zg.config/print-configuration))))
+
+;
+; Test for function behaviours
+;
+
