@@ -69,3 +69,11 @@
         -65536      (parse-int "-65536")
         -2147483647 (parse-int "-2147483647")))
 
+(deftest test-parse-int-min-int
+    "Check the behaviour of function zg.config/parse int."
+    (is (= Integer/MIN_VALUE (parse-int "-2147483648"))))
+
+(deftest test-parse-int-max-int
+    "Check the behaviour of function zg.config/parse int."
+    (is (= Integer/MAX_VALUE (parse-int "2147483647"))))
+
