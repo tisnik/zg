@@ -99,8 +99,9 @@
     "Check the behaviour of function zg.config/parse-int."
     (are [x] (thrown? NumberFormatException x)
         (parse-int "")
-        (parse-int "xyzzy")
-        (parse-int "+1")))
+        (parse-int " ")
+        (parse-int "xyzzy")))
+       ; (parse-int "+1"))) ; removed, not compatible with all supported JDKs
 
 (deftest test-parse-float-zero
     "Check the behaviour of function zg.config/parse-float."
