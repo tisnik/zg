@@ -70,7 +70,7 @@
                 [:div {:class "col-md-3"}
                     (render-search-field word url-prefix)
                 ] ; col ends
-                [:div {:class "col-md-3"}
+                [:div {:class "col-md-4"}
                     [:div {:class "navbar-header"}
                         [:a {:href (str url-prefix "all-words") :class "navbar-brand"} "All words"]
                     ] ; ./navbar-header
