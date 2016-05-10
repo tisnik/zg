@@ -10,7 +10,8 @@
 ;      Pavel Tisnovsky
 ;
 
-(ns zg.config)
+(ns zg.config
+    "Module that contains all functions required to to load configuration from the INI file.")
 
 (require '[clojure.pprint :as pprint])
 
