@@ -215,6 +215,11 @@
                                                              :description  (:description word)}
                                                              :content      [(:word word)]})})))
 
+(defn words->edn
+    [words]
+    (with-out-str
+        (clojure.pprint/pprint words)))
+
 (defn process-wordlist-json
     [request]
     (let [search-results (db-interface/read-all-words)
@@ -235,6 +240,13 @@
           xml-output     (words->xml search-results)]
         (-> (http-response/response xml-output)
             (http-response/content-type "text/xml"))))
+
+(defn process-wordlist-edn
+    [request]
+    (let [search-results (db-interface/read-all-words)
+          edn-output     (words->edn search-results)]
+        (-> (http-response/response edn-output)
+            (http-response/content-type "application/edn"))))
 
 ;defn process-delete-word
 ;   [request]
@@ -283,6 +295,7 @@
             "/wordlist/json"     (process-wordlist-json request)
             "/wordlist/text"     (process-wordlist-text request)
             "/wordlist/xml"      (process-wordlist-xml  request)
+            "/wordlist/edn"      (process-wordlist-edn  request)
             ;"/delete-word"      (process-delete-word   request)
             ;"/undelete-word"    (process-undelete-word request)
             )))
