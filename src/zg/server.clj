@@ -110,7 +110,7 @@
 
 (defn proper-word?
     [word]
-    (re-matches #"[A-Za-z0-9'\-\s_]+" word))
+    (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
 
 (defn process-add-word
     [request]
@@ -125,12 +125,13 @@
 
 (defn process-add-words
     [request]
-    (let [input     (-> (:params request) (get "new-words"))
-          words     (split-words input)
-          user-name (get-user-name request)
-          message   (add-words-message words)]
-          (if (seq words)
-              (store-words words user-name))
+    (let [input        (-> (:params request) (get "new-words"))
+          words        (split-words input)
+          proper-words (filter proper-word? words)
+          user-name    (get-user-name request)
+          message      (add-words-message proper-words)]
+          (if (seq proper-words)
+              (store-words proper-words user-name))
         (finish-processing request nil message nil)))
 
 (defn perform-operation
