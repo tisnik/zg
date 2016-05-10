@@ -87,9 +87,11 @@
         (db-interface/add-new-word-into-dictionary word user-name)))
 
 (defn add-word-message
-    [word]
+    [word proper-word]
     (if (seq word)
-        (str "The following word has been added into the dictionary: '" word "'. Thank you!")
+        (if proper-word
+            (str "The following word has been added into the dictionary: '" word "'. Thank you!")
+            (str "Word with improper characters can not be added to the dictionary, sorry"))
         "No word has been added..."))
 
 (defn add-words-message
@@ -104,13 +106,18 @@
         (->> (clojure.string/split input #"[\s,]")
              (filter seq))))
 
+(defn proper-word?
+    [word]
+    (re-matches #"[A-Za-z0-9'\-\s_]+" word))
+
 (defn process-add-word
     [request]
     (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
           description (-> (:params request) (get "description") clojure.string/trim)
+          proper-word (proper-word? word)
           user-name (get-user-name request)
-          message   (add-word-message word)]
-          (if (seq word)
+          message   (add-word-message word proper-word)]
+          (if (and proper-word (seq word))
               (store-word word description user-name))
         (finish-processing request nil message true))) ; in zw mode every time!
 
