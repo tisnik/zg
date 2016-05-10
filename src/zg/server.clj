@@ -97,7 +97,9 @@
 (defn add-words-message
     [words]
     (if (seq words)
-        (str "The following words have been added into the dictionary: '" (clojure.string/join "," words) "'. Thank you!")
+        (if (> (count words) 1)
+            (str "The following " (count words) " words have been added into the dictionary: '" (clojure.string/join "," words) "'. Thank you!")
+            (str "The following word has been added into the dictionary: '" (clojure.string/join "," words) "'. Thank you!"))
         "No words have been added..."))
 
 (defn split-words
