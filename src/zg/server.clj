@@ -38,12 +38,11 @@
         (println "-> " user-name)
         user-name))
 
-(defn zw-mode?
+(defn get-title
     [request]
     (-> (:configuration request)
-        :server
-        :mode
-        (= "zw")))
+        :display
+        :app-name))
 
 (defn get-url-prefix
     [request]
@@ -52,7 +51,7 @@
         :url-prefix))
 
 (defn finish-processing
-    [request search-results message zw-mode]
+    [request search-results message title mode]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
@@ -62,18 +61,18 @@
         (println word)
         (println search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
-    [request zw-mode]
+    [request title]
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
-        (finish-processing request search-results nil zw-mode)))
+        (finish-processing request search-results nil title)))
 
 (defn store-word
     [word description user-name]
@@ -146,22 +145,22 @@
               (db-interface/undelete-word to-undelete))))
 
 (defn process-all-words
-    [request zw-mode]
+    [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-all-words)]
-        (finish-processing request search-results nil zw-mode)))
+        (finish-processing request search-results nil title)))
 
 (defn process-deleted-words
-    [request zw-mode]
+    [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-deleted-words)]
-        (finish-processing request search-results nil zw-mode)))
+        (finish-processing request search-results nil title)))
 
 (defn process-active-words
-    [request zw-mode]
+    [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
-        (finish-processing request search-results nil zw-mode)))
+        (finish-processing request search-results nil title)))
 
 (defn read-changes-statistic
     []
@@ -176,7 +175,7 @@
     (db-interface/read-changes-for-user user-name))
 
 (defn process-user-list
-    [request zw-mode]
+    [request title]
     (let [changes-statistic (read-changes-statistic)
           changes           (read-changes)
           user-name         (get-user-name request)
@@ -184,24 +183,24 @@
         (println "stat"    changes-statistic)
         (println "changes" changes)
         (if user-name
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title))
                 (http-response/content-type "text/html")))))
 
 (defn process-user-info
-    [request zw-mode]
+    [request title]
     (let [params            (:params request)
           selected-user     (get params "name")
           changes           (read-changes-for-user selected-user)
           user-name         (get-user-name request)
           url-prefix        (get-url-prefix request)]
         (if user-name
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix zw-mode))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title))
                 (http-response/content-type "text/html")))))
 
 (defn words->json
@@ -287,21 +286,21 @@
     [request]
     (println-and-flush "request URI: " (request :uri))
     (let [uri     (request :uri)
-          zw-mode (zw-mode? request)]
+          title   (get-title request)]
         (condp = uri
             "/favicon.ico"       (return-file "favicon.ico" "image/x-icon")
             "/bootstrap.min.css" (return-file "bootstrap.min.css" "text/css")
             "/smearch.css"       (return-file "smearch.css" "text/css")
             "/bootstrap.min.js"  (return-file "bootstrap.min.js" "application/javascript")
-            "/"                  (process-front-page    request zw-mode)
-            "/all-words"         (process-all-words     request zw-mode)
-            "/deleted-words"     (process-deleted-words request zw-mode)
-            "/active-words"      (process-active-words  request zw-mode)
+            "/"                  (process-front-page    request title)
+            "/all-words"         (process-all-words     request title)
+            "/deleted-words"     (process-deleted-words request title)
+            "/active-words"      (process-active-words  request title)
             "/add-word"          (process-add-word      request)
             ;"/find-words"       (process-find-words    request)
             "/add-words"         (process-add-words     request)
-            "/users"             (process-user-list     request zw-mode)
-            "/user"              (process-user-info     request zw-mode)
+            "/users"             (process-user-list     request title)
+            "/user"              (process-user-info     request title)
             "/wordlist/json"     (process-wordlist-json request)
             "/wordlist/text"     (process-wordlist-text request)
             "/wordlist/xml"      (process-wordlist-xml  request)
