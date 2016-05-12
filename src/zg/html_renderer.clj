@@ -18,9 +18,9 @@
 
 (defn render-html-header
     "Renders part of HTML page - the header."
-    [word url-prefix zw-mode]
+    [word url-prefix title]
     [:head
-        [:title (if zw-mode "zw " "zg ") word]
+        [:title (str title ": " word)]
         [:meta {:name "Author"    :content "Pavel Tisnovsky"}]
         [:meta {:name "Generator" :content "Clojure"}]
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
@@ -100,7 +100,7 @@
         (render-html-header "" url-prefix nil) ; TODO change
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name url-prefix nil); TODO change
+                (render-navigation-bar-section user-name url-prefix nil); TODO change
                 [:div {:class "col-md-10"}
                     [:h2 "Sorry, error occured in zg"]
                     [:p message]
@@ -113,12 +113,12 @@
     ))
 
 (defn render-front-page
-    [word user-name search-results message url-prefix zw-mode]
+    [word user-name search-results message url-prefix title mode]
     (page/xhtml
-        (render-html-header word url-prefix zw-mode)
+        (render-html-header word url-prefix title)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section word user-name url-prefix zw-mode)
+                (render-navigation-bar-section user-name url-prefix title mode)
 
                 (if zw-mode
                     (form/form-to [:post (str url-prefix "add-word")]
@@ -155,7 +155,7 @@
                         [:tr [:th "Word"]
                              [:th "Added at"]
                              [:th "Added by"]
-                             (if zw-mode
+                             (if true
                                  [:th "Description"])
                              [:th "Status"]
                              [:th "Operation"]]
@@ -165,7 +165,7 @@
                                 [:tr [:td word]
                                      [:td (:datetime search-result)]
                                      [:td (:user search-result)]
-                                     (if zw-mode
+                                     (if true
                                          [:td (:description search-result)])
                                      [:td (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-success"} "undelete"]
@@ -178,12 +178,12 @@
     ))
 
 (defn render-users
-    [user-name statistic changes url-prefix zw-mode]
+    [user-name statistic changes url-prefix title mode]
     (page/xhtml
-        (render-html-header nil url-prefix zw-mode)
+        (render-html-header nil url-prefix title)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name url-prefix zw-mode)
+                (render-navigation-bar-section user-name url-prefix title mode)
 
                 [:table {:class "table table-stripped table-hover" :style "width:auto"}
                     [:tr [:th "User name"]
@@ -209,12 +209,12 @@
     ))
 
 (defn render-user-info
-    [user-name changes url-prefix zw-mode]
+    [user-name changes url-prefix title mode]
     (page/xhtml
-        (render-html-header nil url-prefix zw-mode)
+        (render-html-header nil url-prefix title)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section nil user-name url-prefix zw-mode)
+                (render-navigation-bar-section user-name url-prefix title mode)
                 [:h1 (str "Changes made by " user-name)]
 
                 [:br]
