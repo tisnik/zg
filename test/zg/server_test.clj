@@ -23,3 +23,11 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions existence
+;
+
+;
+; Test for function behaviours
+;
+
