@@ -132,7 +132,7 @@
           message   (add-word-message word proper-word)]
           (if (and proper-word (seq word))
               (store-word word description user-name))
-        (finish-processing request nil message true))) ; in zw mode every time!
+        (finish-processing request nil message true :unknown))) ; in zw mode every time!
 
 (defn process-add-words
     [request]
@@ -143,7 +143,7 @@
           message      (add-words-message proper-words)]
           (if (seq proper-words)
               (store-words proper-words user-name))
-        (finish-processing request nil message nil)))
+        (finish-processing request nil message nil :unknown)))
 
 (defn perform-operation
     [request]
@@ -160,19 +160,19 @@
     [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-all-words)]
-        (finish-processing request search-results nil title)))
+        (finish-processing request search-results nil title :unknown)))
 
 (defn process-deleted-words
     [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-deleted-words)]
-        (finish-processing request search-results nil title)))
+        (finish-processing request search-results nil title :unknown)))
 
 (defn process-active-words
     [request title]
     (perform-operation request)
     (let [search-results (db-interface/read-active-words)]
-        (finish-processing request search-results nil title)))
+        (finish-processing request search-results nil title :unknown)))
 
 (defn read-changes-statistic
     []
@@ -187,7 +187,7 @@
     (db-interface/read-changes-for-user user-name))
 
 (defn process-user-list
-    [request title]
+    [request title mode]
     (let [changes-statistic (read-changes-statistic)
           changes           (read-changes)
           user-name         (get-user-name request)
@@ -195,10 +195,10 @@
         (println "stat"    changes-statistic)
         (println "changes" changes)
         (if user-name
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title))
+            (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-user-info
@@ -313,7 +313,8 @@
             "/add-word"          (process-add-word      request)
             ;"/find-words"       (process-find-words    request)
             "/add-words"         (process-add-words     request)
-            "/users"             (process-user-list     request title)
+            "/users-whitelist"   (process-user-list     request title :whitelist)
+            "/users-blacklist"   (process-user-list     request title :blacklist)
             "/user"              (process-user-info     request title)
             "/wordlist/json"     (process-wordlist-json request)
             "/wordlist/text"     (process-wordlist-text request)
