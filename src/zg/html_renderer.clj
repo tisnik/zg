@@ -56,37 +56,40 @@
             [:div {:class "input-group-btn"}
                 (form/submit-button {:class "btn btn-default"} "Remember me")]]))
 
+(defn tab-class
+    [active mode]
+    (if (= active mode)
+    {:class "active"}))
+
+(defn users-href
+    [url-prefix mode]
+    (if (= mode :whitelist)
+        (str url-prefix "users-whitelist")
+        (str url-prefix "users-blacklist")))
+
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
-    [word user-name url-prefix zw-mode]
-    [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"}
+    [user-name url-prefix title mode]
+    [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"} ; use navbar-default instead of navbar-inverse
         [:div {:class "container-fluid"}
             [:div {:class "row"}
-                [:div {:class "col-md-1"}
+                [:div {:class "col-md-7"}
                     [:div {:class "navbar-header"}
-                        [:a {:href url-prefix :class "navbar-brand"} (if zw-mode "zw" "zg")]
-                    ] ; ./navbar-header
-                ] ; col ends
-                [:div {:class "col-md-3"}
-                    (render-search-field word url-prefix)
-                ] ; col ends
-                [:div {:class "col-md-4"}
-                    [:div {:class "navbar-header"}
-                        [:a {:href (str url-prefix "all-words") :class "navbar-brand"} "All words"]
+                        [:a {:href url-prefix :class "navbar-brand"} title]
                     ] ; ./navbar-header
                     [:div {:class "navbar-header"}
-                        [:a {:href (str url-prefix "active-words") :class "navbar-brand"} "Active words"]
-                    ] ; ./navbar-header
-                    [:div {:class "navbar-header"}
-                        [:a {:href (str url-prefix "deleted-words") :class "navbar-brand"} "Deleted words"]
-                    ] ; ./navbar-header
-                ] ; col ends
+                        [:ul {:class "nav navbar-nav"}
+                            [:li (tab-class :whitelist mode) [:a {:href (str url-prefix "whitelist")} "Whitelist"]]
+                            [:li (tab-class :blacklist mode) [:a {:href (str url-prefix "blacklist")} "Blacklist"]]
+                        ]
+                    ]
+                ] ; col-md-7 ends
                 [:div {:class "col-md-3"}
                     (render-name-field user-name url-prefix)
                 ]
-                [:div {:class "col-md-1"}
+                [:div {:class "col-md-2"}
                     [:div {:class "navbar-header"}
-                        [:a {:href (str url-prefix "users") :class "navbar-brand"} "Users"]
+                        [:a {:href (users-href url-prefix mode) :class "navbar-brand"} "Users"]
                     ] ; ./navbar-header
                 ] ; col ends
             ] ; row ends
