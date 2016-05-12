@@ -242,29 +242,29 @@
         (clojure.pprint/pprint words)))
 
 (defn process-wordlist-json
-    [request]
-    (let [search-results (db-interface/read-all-words)
+    [request dictionary-type]
+    (let [search-results (db-interface/read-all-words dictionary-type)
           json-output    (words->json search-results)]
         (-> (http-response/response json-output)
             (http-response/content-type "application/json"))))
 
 (defn process-wordlist-text
-    [request]
-    (let [search-results (db-interface/read-all-words)
+    [request dictionary-type]
+    (let [search-results (db-interface/read-all-words dictionary-type)
           text-output    (words->text search-results)]
         (-> (http-response/response text-output)
             (http-response/content-type "text/plain"))))
 
 (defn process-wordlist-xml
-    [request]
-    (let [search-results (db-interface/read-all-words)
+    [request dictionary-type]
+    (let [search-results (db-interface/read-all-words dictionary-type)
           xml-output     (words->xml search-results)]
         (-> (http-response/response xml-output)
             (http-response/content-type "text/xml"))))
 
 (defn process-wordlist-edn
-    [request]
-    (let [search-results (db-interface/read-all-words)
+    [request dictionary-type]
+    (let [search-results (db-interface/read-all-words dictionary-type)
           edn-output     (words->edn search-results)]
         (-> (http-response/response edn-output)
             (http-response/content-type "application/edn"))))
@@ -316,10 +316,14 @@
             "/users-whitelist"   (process-user-list     request title :whitelist)
             "/users-blacklist"   (process-user-list     request title :blacklist)
             "/user"              (process-user-info     request title)
-            "/wordlist/json"     (process-wordlist-json request)
-            "/wordlist/text"     (process-wordlist-text request)
-            "/wordlist/xml"      (process-wordlist-xml  request)
-            "/wordlist/edn"      (process-wordlist-edn  request)
+            "/whitelist/json"    (process-wordlist-json request :whitelist)
+            "/whitelist/text"    (process-wordlist-text request :whitelist)
+            "/whitelist/xml"     (process-wordlist-xml  request :whitelist)
+            "/whitelist/edn"     (process-wordlist-edn  request :whitelist)
+            "/blacklist/json"    (process-wordlist-json request :blacklist)
+            "/blacklist/text"    (process-wordlist-text request :blacklist)
+            "/blacklist/xml"     (process-wordlist-xml  request :blacklist)
+            "/blacklist/edn"     (process-wordlist-edn  request :blacklist)
             ;"/delete-word"      (process-delete-word   request)
             ;"/undelete-word"    (process-undelete-word request)
             )))
