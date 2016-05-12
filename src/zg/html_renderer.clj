@@ -122,34 +122,66 @@
         [:body
             [:div {:class "container"}
                 (render-navigation-bar-section user-name url-prefix title mode)
-
-                (if zw-mode
-                    (form/form-to [:post (str url-prefix "add-word")]
-                            [:table {:style "border-collapse: separate; border-spacing: 10px;"}
-                                [:tr [:td [:div {:class "label label-primary"} "New word"]]
-                                     [:td "&nbsp;"]
-                                     [:td (form/text-field {:size "30"} "new-word")]]
-                                [:tr [:td [:div {:class "label label-default"} "Description (optional)"]]
-                                     [:td "&nbsp;"]
-                                     [:td (form/text-field {:size "60"} "description")]]
-                                [:tr [:td "&nbsp;"]
-                                     [:td "&nbsp;"]
-                                     [:td (form/submit-button {:class "btn btn-danger"} "Add new word")]]]
-                            [:br]
-                    )
-                    (form/form-to [:post (str url-prefix "add-words")]
-                            [:div {:class "label label-primary"} "New words"]
-                            "&nbsp;"
-                            [:div {:class "label label-warning"} "(please use spaces or commas as separators)"]
-                            [:br]
-                            (form/text-area {:cols "120" :rows "8"} "new-words")
-                            [:br]
-                            (form/submit-button {:class "btn btn-danger"} "Add new words")
-                            [:br]
-                        ))
-
+            (if (= mode :whitelist)
+                [:div {:class "container-fluid"}
+                        [:div {:class "row"}
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "all-words-in-whitelist") :class "navbar-brand"} "All words"]
+                            ] ; ./navbar-header
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "active-words-in-whitelist") :class "navbar-brand"} "Active words"]
+                            ] ; ./navbar-header
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "deleted-words-in-whitelist") :class "navbar-brand"} "Deleted words"]
+                            ] ; ./navbar-header
+                        [:div {:style "width:80%"}
+                            (render-search-field word url-prefix)
+                        ]
+                        ]
                         [:br]
                         [:br]
+                        (form/form-to [:post (str url-prefix "add-words-to-whitelist")]
+                                [:div {:class "label label-primary"} "New words"]
+                                "&nbsp;"
+                                [:div {:class "label label-warning"} "(please use spaces or commas as separators)"]
+                                [:br]
+                                (form/text-area {:cols "80" :rows "8"} "new-words")
+                                [:br]
+                                (form/submit-button {:class "btn btn-danger"} "Add new words")
+                                [:br]
+                            )
+                    ]
+                [:div {:class "container-fluid"}
+                        [:div {:class "row"}
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "all-words-in-blacklist") :class "navbar-brand"} "All words"]
+                            ] ; ./navbar-header
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "active-words-in-blacklist") :class "navbar-brand"} "Active words"]
+                            ] ; ./navbar-header
+                            [:div {:class "navbar-header"}
+                                [:a {:href (str url-prefix "deleted-words-in-blacklist") :class "navbar-brand"} "Deleted words"]
+                            ] ; ./navbar-header
+                        [:div {:style "width:80%"}
+                            (render-search-field word url-prefix)
+                        ]
+                        ]
+                        [:br]
+                        [:br]
+                        (form/form-to [:post (str url-prefix "add-word-to-blacklist")]
+                                [:table {:style "border-collapse: separate; border-spacing: 10px;"}
+                                    [:tr [:td [:div {:class "label label-primary"} "New word"]]
+                                         [:td "&nbsp;"]
+                                         [:td (form/text-field {:size "30"} "new-word")]]
+                                    [:tr [:td [:div {:class "label label-default"} "Description (optional)"]]
+                                         [:td "&nbsp;"]
+                                         [:td (form/text-field {:size "50"} "description")]]
+                                    [:tr [:td "&nbsp;"]
+                                         [:td "&nbsp;"]
+                                         [:td (form/submit-button {:class "btn btn-danger"} "Add new word")]]]
+                                [:br]
+                    )])
+                
                 (if message
                     [:div {:class "label label-warning"} message ]
                 )
