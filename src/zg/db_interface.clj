@@ -72,8 +72,11 @@
 (defn read-all-words
     [dictionary-type]
     (try
-        (jdbc/query db-spec/zg-db
-                        ["select * from dictionary where dictionary=? order by word" (dictionary-type->char dictionary-type->char)])
+        (if dictionary-type
+            (jdbc/query db-spec/zg-db
+                ["select * from dictionary where dictionary=? order by word" (dictionary-type->char dictionary-type->char)])
+            (jdbc/query db-spec/zg-db
+                ["select * from dictionary order by word"]))
         (catch Exception e
             (println e)
             [])))
