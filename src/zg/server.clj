@@ -72,7 +72,21 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
-        (finish-processing request search-results nil title)))
+        (finish-processing request search-results nil title :whitelist)))
+
+(defn process-whitelist
+    [request title]
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+        (finish-processing request search-results nil title :whitelist)))
+
+(defn process-blacklist
+    [request title]
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+        (finish-processing request search-results nil title :blacklist)))
 
 (defn store-word
     [word description user-name]
@@ -293,6 +307,8 @@
             "/smearch.css"       (return-file "smearch.css" "text/css")
             "/bootstrap.min.js"  (return-file "bootstrap.min.js" "application/javascript")
             "/"                  (process-front-page    request title)
+            "/whitelist"         (process-whitelist     request title)
+            "/blacklist"         (process-blacklist     request title)
             "/all-words"         (process-all-words     request title)
             "/deleted-words"     (process-deleted-words request title)
             "/active-words"      (process-active-words  request title)
