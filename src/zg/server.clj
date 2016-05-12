@@ -69,10 +69,8 @@
 
 (defn process-front-page
     [request title]
-    (let [params         (:params request)
-          word           (get params "word")
-          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
-        (finish-processing request search-results nil title :whitelist)))
+    (let [params         (:params request)]
+        (finish-processing request nil nil title :whitelist)))
 
 (defn process-whitelist
     [request title]
