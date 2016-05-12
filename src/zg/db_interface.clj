@@ -19,20 +19,20 @@
 (require '[zg.format-date :as format-date])
 
 (defn add-new-word-into-dictionary
-    ([word user-name]
+    ([word user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
         (println "storing" datetime word)
         (try
             (jdbc/insert! db-spec/zg-db
-                          :dictionary {:word word :user user-name :datetime datetime :deleted 0})
+                          :dictionary {:word word :dictionary dictionary-type :user user-name :datetime datetime :deleted 0})
             (catch Exception e
                 (println e)))))
-    ([word description user-name]
+    ([word description user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
         (println "storing" datetime word)
         (try
             (jdbc/insert! db-spec/zg-db
-                          :dictionary {:word word :user user-name :datetime datetime :deleted 0 :description description})
+                          :dictionary {:word word :dictionary dictionary-type :user user-name :datetime datetime :deleted 0 :description description})
             (catch Exception e
                 (try
                     (jdbc/update! db-spec/zg-db
@@ -46,28 +46,34 @@
         1
         0))
 
+(defn dictionary-type->char
+    [dictionary-type]
+    (condp = dictionary-type
+        :whitelist "w"
+        :blacklist "b"))
+
 (defn set-word-status
-    [word status]
+    [word dictionary-type status]
     (try
         (jdbc/update! db-spec/zg-db
-                      :dictionary {:deleted (status->int status)} ["word = ?" word])
+                      :dictionary {:deleted (status->int status)} ["word = ? and dictionary = ?" word (dictionary-type->char dictionary-type)])
         (catch Exception e
             (println e)
             [])))
 
 (defn delete-word
-    [word]
-    (set-word-status word :deleted))
+    [word dictionary-type]
+    (set-word-status word dictionary-type :deleted))
 
 (defn undelete-word
-    [word]
-    (set-word-status word :undeleted))
+    [word dictionary-type]
+    (set-word-status word dictionary-type :undeleted))
 
 (defn read-all-words
-    []
+    [dictionary-type]
     (try
         (jdbc/query db-spec/zg-db
-                        ["select * from dictionary order by word"])
+                        ["select * from dictionary where dictionary=? order by word" (dictionary-type->char dictionary-type->char)])
         (catch Exception e
             (println e)
             [])))
