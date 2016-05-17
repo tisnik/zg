@@ -72,19 +72,25 @@
             [])))
 
 (defn delete-word
+    "Mark the selected word with the flag 'deleted'. The word remains in the
+     dictionary so it can be undeleted in the future."
     [word dictionary-type]
     (set-word-status word dictionary-type :deleted))
 
 (defn undelete-word
+    "Mark the selected word with the flag 'active' (ie it's 'undeleted')."
     [word dictionary-type]
     (set-word-status word dictionary-type :undeleted))
 
 (defn read-all-words
+    "Read all words from both dictionaries (dictionary-type is nil) or
+     from selected dictionary (dictionary-type is specified)."
     [dictionary-type]
     (try
         (if dictionary-type
             (jdbc/query db-spec/zg-db
-                ["select * from dictionary where dictionary=? order by word" (dictionary-type->char dictionary-type->char)])
+                ["select * from dictionary where dictionary=? order by word"
+                    (dictionary-type->char dictionary-type)])
             (jdbc/query db-spec/zg-db
                 ["select * from dictionary order by word"]))
         (catch Exception e
