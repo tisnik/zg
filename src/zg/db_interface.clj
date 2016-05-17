@@ -18,28 +18,6 @@
 (require '[zg.db-spec     :as db-spec])
 (require '[zg.format-date :as format-date])
 
-(defn add-new-word-into-dictionary
-    ([word user-name dictionary-type]
-    (let [datetime (format-date/format-current-date)]
-        (println "storing" datetime word)
-        (try
-            (jdbc/insert! db-spec/zg-db
-                          :dictionary {:word word :dictionary dictionary-type :user user-name :datetime datetime :deleted 0})
-            (catch Exception e
-                (println e)))))
-    ([word description user-name dictionary-type]
-    (let [datetime (format-date/format-current-date)]
-        (println "storing" datetime word)
-        (try
-            (jdbc/insert! db-spec/zg-db
-                          :dictionary {:word word :dictionary dictionary-type :user user-name :datetime datetime :deleted 0 :description description})
-            (catch Exception e
-                (try
-                    (jdbc/update! db-spec/zg-db
-                          :dictionary {:description description} ["word=?" word])
-                    (catch Exception e
-                        (println e))))))))
-
 (defn status->int
     [status]
     (if (= status :deleted)
@@ -51,6 +29,38 @@
     (condp = dictionary-type
         :whitelist "w"
         :blacklist "b"))
+
+(defn insert-word-into-dictionary
+    "Try to insert new word into the dictionary. If insert fails, exception
+     is thrown and needs to be caught outside this function."
+    [word description user-name dictionary-type datetime]
+    (jdbc/insert! db-spec/zg-db
+        :dictionary {:word       word
+                     :dictionary (dictionary-type->char dictionary-type)
+                     :user       user-name
+                     :datetime   datetime
+                     :deleted     0
+                     :description description}))
+
+(defn add-new-word-into-dictionary
+    ([word user-name dictionary-type]
+    (let [datetime (format-date/format-current-date)]
+        (println "storing" datetime word)
+        (try
+            (insert-word-into-dictionary word nil user-name dictionary-type datetime)
+            (catch Exception e
+                (println e)))))
+    ([word description user-name dictionary-type]
+    (let [datetime (format-date/format-current-date)]
+        (println "storing" datetime word)
+        (try
+            (insert-word-into-dictionary word description user-name dictionary-type datetime)
+            (catch Exception e
+                (try
+                    (jdbc/update! db-spec/zg-db
+                          :dictionary {:description description} ["word=?" word])
+                    (catch Exception e
+                        (println e))))))))
 
 (defn set-word-status
     [word dictionary-type status]
