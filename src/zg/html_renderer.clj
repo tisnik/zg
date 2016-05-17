@@ -65,15 +65,32 @@
                 (form/submit-button {:class "btn btn-default"} "Remember me")]]))
 
 (defn tab-class
+    "In the tab menu on top, only one item could be actived."
     [active mode]
     (if (= active mode)
-    {:class "active"}))
+        {:class "active"}))
+
+(defn user-href
+    "Generator for href to the page containing user info."
+    [user-name mode]
+    (let [destination (if (= mode :whitelist)
+                          "user-whitelist"
+                          "user-blacklist")]
+        [:a {:href (str destination "?name=" user-name)} user-name]))
 
 (defn users-href
+    "Generator for URL used by 'Users' menu item."
     [url-prefix mode]
     (if (= mode :whitelist)
         (str url-prefix "users-whitelist")
         (str url-prefix "users-blacklist")))
+
+(defn remember-me-href
+    "Generator for URL used by 'remember me' button."
+    [url-prefix mode]
+    (if (= mode :whitelist)
+        (str url-prefix "whitelist")
+        (str url-prefix "blacklist")))
 
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
@@ -93,7 +110,7 @@
                     ]
                 ] ; col-md-7 ends
                 [:div {:class "col-md-3"}
-                    (render-name-field user-name url-prefix)
+                    (render-name-field user-name (remember-me-href url-prefix mode))
                 ]
                 [:div {:class "col-md-2"}
                     [:div {:class "navbar-header"}
@@ -101,7 +118,7 @@
                     ] ; ./navbar-header
                 ] ; col ends
             ] ; row ends
-        ] ; /.container-fluid
+        ] ; </div .container-fluid>
 ]); </nav>
 
 (defn render-error-page
