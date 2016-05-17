@@ -56,6 +56,37 @@
     (testing "if the zg.server/finish-processing definition exists."
         (is (callable? 'zg.server/finish-processing))))
 
+
+(deftest test-process-front-page-existence
+    "Check that the zg.server/process-front-page definition exists."
+    (testing "if the zg.server/process-front-page definition exists."
+        (is (callable? 'zg.server/process-front-page))))
+
+
+(deftest test-process-whitelist-existence
+    "Check that the zg.server/process-whitelist definition exists."
+    (testing "if the zg.server/process-whitelist definition exists."
+        (is (callable? 'zg.server/process-whitelist))))
+
+
+(deftest test-process-blacklist-existence
+    "Check that the zg.server/process-blacklist definition exists."
+    (testing "if the zg.server/process-blacklist definition exists."
+        (is (callable? 'zg.server/process-blacklist))))
+
+
+(deftest test-store-word-existence
+    "Check that the zg.server/store-word definition exists."
+    (testing "if the zg.server/store-word definition exists."
+        (is (callable? 'zg.server/store-word))))
+
+
+(deftest test-store-words-existence
+    "Check that the zg.server/store-words definition exists."
+    (testing "if the zg.server/store-words definition exists."
+        (is (callable? 'zg.server/store-words))))
+
+
 ;
 ; Test for function behaviours
 ;
