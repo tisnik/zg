@@ -134,6 +134,7 @@
     (read-words-with-status :undeleted dictionary-type))
 
 (defn read-changes-statistic
+    "Read basic statistic about changes made by all users. For each user, number of changes is displayed."
     []
     (try
         (jdbc/query db-spec/zg-db
@@ -143,6 +144,7 @@
             [])))
 
 (defn read-changes
+    "Read all changes sorted by date and time the change has been made."
     []
     (try
         (jdbc/query db-spec/zg-db
@@ -152,6 +154,7 @@
             [])))
 
 (defn read-changes-for-user
+    "Read all changes for selected user sorted by date and time the change has been made."
     [user-name]
     (try
         (jdbc/query db-spec/zg-db
