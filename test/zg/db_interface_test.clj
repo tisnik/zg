@@ -68,3 +68,33 @@
     (testing "if the zg.db-interface/undelete-word definition exists."
         (is (callable? 'zg.db-interface/undelete-word))))
 
+
+(deftest test-read-all-words-existence
+    "Check that the zg.db-interface/read-all-words definition exists."
+    (testing "if the zg.db-interface/read-all-words definition exists."
+        (is (callable? 'zg.db-interface/read-all-words))))
+
+
+(deftest test-read-words-for-pattern-existence
+    "Check that the zg.db-interface/read-words-for-pattern definition exists."
+    (testing "if the zg.db-interface/read-words-for-pattern definition exists."
+        (is (callable? 'zg.db-interface/read-words-for-pattern))))
+
+
+(deftest test-read-words-with-status-existence
+    "Check that the zg.db-interface/read-words-with-status definition exists."
+    (testing "if the zg.db-interface/read-words-with-status definition exists."
+        (is (callable? 'zg.db-interface/read-words-with-status))))
+
+
+(deftest test-read-deleted-words-existence
+    "Check that the zg.db-interface/read-deleted-words definition exists."
+    (testing "if the zg.db-interface/read-deleted-words definition exists."
+        (is (callable? 'zg.db-interface/read-deleted-words))))
+
+
+(deftest test-read-active-words-existence
+    "Check that the zg.db-interface/read-active-words definition exists."
+    (testing "if the zg.db-interface/read-active-words definition exists."
+        (is (callable? 'zg.db-interface/read-active-words))))
+
