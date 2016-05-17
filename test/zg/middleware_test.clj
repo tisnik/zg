@@ -23,3 +23,11 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions existence
+;
+
+(deftest test-inject-configuration-existence
+    "Check that the zg.middleware/inject-configuration definition exists."
+    (testing "if the zg.middleware/inject-configuration definition exists."
+        (is (callable? 'zg.middleware/inject-configuration))))
