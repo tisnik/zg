@@ -68,34 +68,42 @@
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
+    "Function that prepares data for the front page."
     [request title]
     (let [params         (:params request)]
         (finish-processing request nil nil title :whitelist)))
 
 (defn process-whitelist
+    "Function that prepares data for the whitelist front page."
     [request title]
     (let [params         (:params request)
           word           (get params "word")
-          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :whitelist))]
         (finish-processing request search-results nil title :whitelist)))
 
 (defn process-blacklist
+    "Function that prepares data for the blacklist front page."
     [request title]
     (let [params         (:params request)
           word           (get params "word")
-          search-results (if (not (empty? word)) (db-interface/read-words-for-pattern word))]
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :blacklist))]
         (finish-processing request search-results nil title :blacklist)))
 
 (defn store-word
-    [word description user-name]
-    (println "About to store following word:" word " with description: " description)
-    (db-interface/add-new-word-into-dictionary word description user-name))
+    "Store one word into the dictionary."
+    [word description user-name dictionary-type]
+    (println "About to store following word:" word " with description: " description
+             " into dictionary: " (str dictionary-type))
+    (db-interface/add-new-word-into-dictionary word description (or user-name "(*unknown*)") dictionary-type))
 
 (defn store-words
-    [words user-name]
+    "Store sequence of words into the dictionary."
+    [words user-name dictionary-type]
     (println "About to store following words:" words)
     (doseq [word words]
-        (db-interface/add-new-word-into-dictionary word user-name)))
+        (db-interface/add-new-word-into-dictionary word user-name dictionary-type)))
 
 (defn add-word-message
     [word proper-word]
