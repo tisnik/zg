@@ -51,3 +51,20 @@
         (is (callable? 'zg.db-interface/add-new-word-into-dictionary))))
 
 
+(deftest test-set-word-status-existence
+    "Check that the zg.db-interface/set-word-status definition exists."
+    (testing "if the zg.db-interface/set-word-status definition exists."
+        (is (callable? 'zg.db-interface/set-word-status))))
+
+
+(deftest test-delete-word-existence
+    "Check that the zg.db-interface/delete-word definition exists."
+    (testing "if the zg.db-interface/delete-word definition exists."
+        (is (callable? 'zg.db-interface/delete-word))))
+
+
+(deftest test-undelete-word-existence
+    "Check that the zg.db-interface/undelete-word definition exists."
+    (testing "if the zg.db-interface/undelete-word definition exists."
+        (is (callable? 'zg.db-interface/undelete-word))))
+
