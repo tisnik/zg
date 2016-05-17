@@ -252,26 +252,29 @@
                     [:tr [:th "User name"]
                          [:th "Changes made"]]
                     (for [stat statistic]
-                        [:tr [:td [:a {:href (str "user?name=" (:user stat))} (:user stat)]]
+                        [:tr [:td (user-href (:user stat) mode)]
                              [:td (:cnt stat)]]
                     )
-                ]
+                ] ; </table>
                 [:br]
                 [:table {:class "table table-stripped table-hover" :style "width:auto"}
                     [:tr [:th "Word"]
+                         [:th "Dictionary"]
                          [:th "Added at"]
                          [:th "Added by"]]
                     (for [change changes]
                         [:tr [:td (:word change)]
+                             [:td (if (= (:dictionary change) "w") "whitelist" "blacklist")]
                              [:td (:datetime change)]
-                             [:td [:a {:href (str "user?name=" (:user change))} (:user change)]]])
-                ]
+                             [:td (user-href (:user change) mode)]])
+                ] ; </table>
                 (render-html-footer)
             ] ; </div class="container">
         ] ; </body>
     ))
 
 (defn render-user-info
+    "Render page containing info about one selected user."
     [user-name changes url-prefix title mode]
     (page/xhtml
         (render-html-header nil url-prefix title)
@@ -283,11 +286,13 @@
                 [:br]
                 [:table {:class "table table-stripped table-hover" :style "width:auto"}
                     [:tr [:th "Word"]
+                         [:th "Dictionary"]
                          [:th "Added at"]]
                     (for [change changes]
                         [:tr [:td (:word change)]
+                             [:td (if (= (:dictionary change) "w") "whitelist" "blacklist")]
                              [:td (:datetime change)]])
-                ]
+                ] ; </table>
                 (render-html-footer)
             ] ; </div class="container">
         ] ; </body>
