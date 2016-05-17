@@ -132,55 +132,59 @@
     (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
 
 (defn process-add-word
-    [request]
+    "Add word provided by user (together with its description) to the blacklist."
+    [request title mode]
     (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
           description (-> (:params request) (get "description") clojure.string/trim)
           proper-word (proper-word? word)
           user-name (get-user-name request)
           message   (add-word-message word proper-word)]
           (if (and proper-word (seq word))
-              (store-word word description user-name))
-        (finish-processing request nil message true :unknown))) ; in zw mode every time!
+              (store-word word description user-name mode))
+        (finish-processing request nil message title mode)))
 
 (defn process-add-words
-    [request]
+    [request title mode]
     (let [input        (-> (:params request) (get "new-words"))
           words        (split-words input)
           proper-words (filter proper-word? words)
           user-name    (get-user-name request)
           message      (add-words-message proper-words)]
           (if (seq proper-words)
-              (store-words proper-words user-name))
-        (finish-processing request nil message nil :unknown)))
+              (store-words proper-words user-name mode))
+        (finish-processing request nil message title mode)))
 
 (defn perform-operation
-    [request]
+    [request mode]
     (let [to-delete   (-> (:params request) (get "delete"))
           to-undelete (-> (:params request) (get "undelete"))]
           (println "to delete" to-delete)
           (println "to undelete" to-undelete)
           (if to-delete
-              (db-interface/delete-word to-delete))
+              (db-interface/delete-word to-delete mode))
           (if to-undelete
-              (db-interface/undelete-word to-undelete))))
+              (db-interface/undelete-word to-undelete mode))))
 
 (defn process-all-words
-    [request title]
-    (perform-operation request)
-    (let [search-results (db-interface/read-all-words)]
-        (finish-processing request search-results nil title :unknown)))
+    "Read all words from the selected dictionary and display them to user on generated page."
+    [request title mode]
+    (perform-operation request mode)
+    (let [search-results (db-interface/read-all-words mode)]
+        (finish-processing request search-results nil title mode)))
 
 (defn process-deleted-words
-    [request title]
-    (perform-operation request)
-    (let [search-results (db-interface/read-deleted-words)]
-        (finish-processing request search-results nil title :unknown)))
+    "Read all deleted words from the selected dictionary and display them to user on generated page."
+    [request title mode]
+    (perform-operation request mode)
+    (let [search-results (db-interface/read-deleted-words mode)]
+        (finish-processing request search-results nil title mode)))
 
 (defn process-active-words
-    [request title]
-    (perform-operation request)
-    (let [search-results (db-interface/read-active-words)]
-        (finish-processing request search-results nil title :unknown)))
+    "Read all nondeleted words from the selected dictionary and display them to user on generated page."
+    [request title mode]
+    (perform-operation request mode)
+    (let [search-results (db-interface/read-active-words mode)]
+        (finish-processing request search-results nil title mode)))
 
 (defn read-changes-statistic
     []
@@ -210,17 +214,17 @@
                 (http-response/content-type "text/html")))))
 
 (defn process-user-info
-    [request title]
+    [request title mode]
     (let [params            (:params request)
           selected-user     (get params "name")
           changes           (read-changes-for-user selected-user)
           user-name         (get-user-name request)
           url-prefix        (get-url-prefix request)]
         (if user-name
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title))
+            (-> (http-response/response (html-renderer/render-user-info selected-user changes url-prefix title mode))
                 (http-response/content-type "text/html")))))
 
 (defn words->json
