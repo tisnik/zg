@@ -125,10 +125,10 @@
     "Render error page with a 'back' button."
     [word user-name message url-prefix]
     (page/xhtml
-        (render-html-header "" url-prefix nil) ; TODO change
+        (render-html-header "" url-prefix nil) ; TODO change, it might not work correctly (title, mode)
         [:body
             [:div {:class "container"}
-                (render-navigation-bar-section user-name url-prefix nil); TODO change
+                (render-navigation-bar-section user-name url-prefix nil); TODO change, it might not work correctly (title, mode)
                 [:div {:class "col-md-10"}
                     [:h2 "Sorry, error occured in zg"]
                     [:p message]
@@ -141,6 +141,7 @@
     ))
 
 (defn render-front-page
+    "Render front page of this application."
     [word user-name search-results message url-prefix title mode]
     (page/xhtml
         (render-html-header word url-prefix title)
@@ -159,9 +160,9 @@
                             [:div {:class "navbar-header"}
                                 [:a {:href (str url-prefix "deleted-words-in-whitelist") :class "navbar-brand"} "Deleted words"]
                             ] ; ./navbar-header
-                        [:div {:style "width:80%"}
-                            (render-search-field word url-prefix)
-                        ]
+                            [:div {:style "width:80%"}
+                                (render-search-field word url-prefix mode)
+                            ]
                         ]
                         [:br]
                         [:br]
@@ -175,6 +176,7 @@
                                 (form/submit-button {:class "btn btn-danger"} "Add new words")
                                 [:br]
                             )
+                                [:br]
                     ]
                 [:div {:class "container-fluid"}
                         [:div {:class "row"}
@@ -187,9 +189,9 @@
                             [:div {:class "navbar-header"}
                                 [:a {:href (str url-prefix "deleted-words-in-blacklist") :class "navbar-brand"} "Deleted words"]
                             ] ; ./navbar-header
-                        [:div {:style "width:80%"}
-                            (render-search-field word url-prefix)
-                        ]
+                            [:div {:style "width:80%"}
+                                (render-search-field word url-prefix mode)
+                            ]
                         ]
                         [:br]
                         [:br]
@@ -215,7 +217,7 @@
                         [:tr [:th "Word"]
                              [:th "Added at"]
                              [:th "Added by"]
-                             (if true
+                             (if (= mode :blacklist)
                                  [:th "Description"])
                              [:th "Status"]
                              [:th "Operation"]]
@@ -224,8 +226,8 @@
                                   word    (:word search-result)]
                                 [:tr [:td word]
                                      [:td (:datetime search-result)]
-                                     [:td (:user search-result)]
-                                     (if true
+                                     [:td (user-href (:user search-result) mode)]
+                                     (if (= mode :blacklist)
                                          [:td (:description search-result)])
                                      [:td (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-success"} "undelete"]
@@ -238,6 +240,7 @@
     ))
 
 (defn render-users
+    "Render page containing list of all users."
     [user-name statistic changes url-prefix title mode]
     (page/xhtml
         (render-html-header nil url-prefix title)
