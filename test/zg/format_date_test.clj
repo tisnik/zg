@@ -23,3 +23,18 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions existence
+;
+
+(deftest test-format-date-existence
+    "Check that the zg.format-date/format-date definition exists."
+    (testing "if the zg.format-date/format-date definition exists."
+        (is (callable? 'zg.format-date/format-date))))
+
+
+(deftest test-format-current-date-existence
+    "Check that the zg.format-date/format-current-date definition exists."
+    (testing "if the zg.format-date/format-current-date definition exists."
+        (is (callable? 'zg.format-date/format-current-date))))
+
