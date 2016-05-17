@@ -10,7 +10,8 @@
 ;      Pavel Tisnovsky
 ;
 
-(ns zg.html-renderer)
+(ns zg.html-renderer
+    "Module that contains functions used to render HTML pages sent back to the browser.")
 
 (require '[hiccup.core            :as hiccup])
 (require '[hiccup.page            :as page])
@@ -36,10 +37,17 @@
     []
     [:div "<br /><br /><br /><br />Author: Pavel Tisnovsky &lt;<a href='mailto:ptisnovs@redhat.com'>ptisnovs@redhat.com</a>&gt"])
 
+(defn search-href
+    "Generator of href destination for the 'search' input field."
+    [url-prefix mode]
+    (if (= mode :whitelist)
+        (str url-prefix "whitelist")
+        (str url-prefix "blacklist")))
+
 (defn render-search-field
     "Renders search box on the top side of HTML page."
-    [word url-prefix]
-    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get url-prefix ]
+    [word url-prefix mode]
+    (form/form-to {:class "navbar-form navbar-left" :role "search"} [:get (search-href url-prefix mode)]
         [:div {:class "input-group"}
             [:span {:class "input-group-addon"} "Search"]
             (form/text-field {:size "40" :class "form-control" :placeholder "Search for word"} "word" (str word))
