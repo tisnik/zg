@@ -98,3 +98,21 @@
     (testing "if the zg.db-interface/read-active-words definition exists."
         (is (callable? 'zg.db-interface/read-active-words))))
 
+
+(deftest test-read-changes-statistic-existence
+    "Check that the zg.db-interface/read-changes-statistic definition exists."
+    (testing "if the zg.db-interface/read-changes-statistic definition exists."
+        (is (callable? 'zg.db-interface/read-changes-statistic))))
+
+
+(deftest test-read-changes-existence
+    "Check that the zg.db-interface/read-changes definition exists."
+    (testing "if the zg.db-interface/read-changes definition exists."
+        (is (callable? 'zg.db-interface/read-changes))))
+
+
+(deftest test-read-changes-for-user-existence
+    "Check that the zg.db-interface/read-changes-for-user definition exists."
+    (testing "if the zg.db-interface/read-changes-for-user definition exists."
+        (is (callable? 'zg.db-interface/read-changes-for-user))))
+
