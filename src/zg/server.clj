@@ -124,7 +124,7 @@
 (defn split-words
     [input]
     (if input
-        (->> (clojure.string/split input #"[\s,]")
+        (->> (clojure.string/split input #"[\s,\n]")
              (filter seq))))
 
 (defn proper-word?
