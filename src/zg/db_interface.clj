@@ -98,30 +98,40 @@
             [])))
 
 (defn read-words-for-pattern
-    [pattern]
+    "Read all words that are like specified pattern from both dictionaries
+     (dictionary-type is nil) or from selected dictionary (dictionary-type is specified)."
+    [pattern dictionary-type]
     (try
         (jdbc/query db-spec/zg-db
-                        ["select * from dictionary where word like ? order by word" (str "%" pattern "%")])
+                        ["select * from dictionary where word like ? and dictionary=? order by word"
+                        (str "%" pattern "%") (dictionary-type->char dictionary-type)])
         (catch Exception e
             (println e)
             nil)))
 
 (defn read-words-with-status
-    [status]
+    "Read all words with specified status (deleted/active) from both dictionaries
+     (dictionary-type is nil) or from selected dictionary (dictionary-type is specified)."
+    [status dictionary-type]
     (try
         (jdbc/query db-spec/zg-db
-                        ["select * from dictionary where deleted = ? order by word" (status->int status)])
+                        ["select * from dictionary where deleted = ? and dictionary=? order by word"
+                        (status->int status) (dictionary-type->char dictionary-type)])
         (catch Exception e
             (println e)
             [])))
 
 (defn read-deleted-words
-    []
-    (read-words-with-status :deleted))
+    "Read all deleted words from both dictionaries (dictionary-type is nil) or
+     from selected dictionary (dictionary-type is specified)."
+    [dictionary-type]
+    (read-words-with-status :deleted dictionary-type))
 
 (defn read-active-words
-    []
-    (read-words-with-status :undeleted))
+    "Read all undeleted words from both dictionaries (dictionary-type is nil) or
+     from selected dictionary (dictionary-type is specified)."
+    [dictionary-type]
+    (read-words-with-status :undeleted dictionary-type))
 
 (defn read-changes-statistic
     []
