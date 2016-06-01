@@ -7,7 +7,7 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
 (ns zg.core
@@ -24,10 +24,11 @@
 (require '[zg.middleware           :as middleware])
 
 (def default-port
+    "Default port on which zg accepts all HTTP requests."
     "3000")
 
 (def cli-options
-    "Definitions of all command line options currenty supported."
+    "Definitions of all command line options that are  currenty supported."
     ;; an option with a required argument
     [["-p" "--port   PORT"    "port number"   :id :port]])
 
