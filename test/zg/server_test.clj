@@ -105,10 +105,16 @@
         (is (callable? 'zg.server/split-words))))
 
 
-(deftest test-proper-word?-existence
-    "Check that the zg.server/proper-word? definition exists."
-    (testing "if the zg.server/proper-word? definition exists."
-        (is (callable? 'zg.server/proper-word?))))
+(deftest test-proper-word-for-whitelist?-existence
+    "Check that the zg.server/proper-word-for-whitelist? definition exists."
+    (testing "if the zg.server/proper-word-for-whitelist? definition exists."
+        (is (callable? 'zg.server/proper-word-for-whitelist?))))
+
+
+(deftest test-proper-word-for-blacklist?-existence
+    "Check that the zg.server/proper-word-for-blacklist? definition exists."
+    (testing "if the zg.server/proper-word-for-blacklist? definition exists."
+        (is (callable? 'zg.server/proper-word-for-blacklist?))))
 
 
 (deftest test-process-add-word-existence
