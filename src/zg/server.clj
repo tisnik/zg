@@ -367,6 +367,7 @@
             "/all-words/text"         (process-wordlist-text request nil)
             "/all-words/xml"          (process-wordlist-xml  request nil)
             "/all-words/edn"          (process-wordlist-edn  request nil)
+            "/all-words/csv"          (process-wordlist-csv  request nil)
             "/whitelist/json"         (process-wordlist-json request :whitelist)
             "/whitelist/text"         (process-wordlist-text request :whitelist)
             "/whitelist/xml"          (process-wordlist-xml  request :whitelist)
