@@ -117,6 +117,36 @@
         (is (callable? 'zg.server/process-add-word))))
 
 
+(deftest test-process-add-words-existence
+    "Check that the zg.server/process-add-words definition exists."
+    (testing "if the zg.server/process-add-words definition exists."
+        (is (callable? 'zg.server/process-add-words))))
+
+
+(deftest test-perform-operation-existence
+    "Check that the zg.server/perform-operation definition exists."
+    (testing "if the zg.server/perform-operation definition exists."
+        (is (callable? 'zg.server/perform-operation))))
+
+
+(deftest test-process-all-words-existence
+    "Check that the zg.server/process-all-words definition exists."
+    (testing "if the zg.server/process-all-words definition exists."
+        (is (callable? 'zg.server/process-all-words))))
+
+
+(deftest test-process-deleted-words-existence
+    "Check that the zg.server/process-deleted-words definition exists."
+    (testing "if the zg.server/process-deleted-words definition exists."
+        (is (callable? 'zg.server/process-deleted-words))))
+
+
+(deftest test-process-active-words-existence
+    "Check that the zg.server/process-active-words definition exists."
+    (testing "if the zg.server/process-active-words definition exists."
+        (is (callable? 'zg.server/process-active-words))))
+
+
 ;
 ; Test for function behaviours
 ;
