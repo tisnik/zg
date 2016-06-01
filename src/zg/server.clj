@@ -7,14 +7,16 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
-(ns zg.server)
+(ns zg.server
+    "Server module with functions to accept requests and send response back to users via HTTP.")
 
 (require '[ring.util.response     :as http-response])
 (require '[clojure.data.json      :as json])
 (require '[clojure.xml            :as xml])
+(require '[clojure.data.csv       :as csv])
 
 (require '[zg.db-interface        :as db-interface])
 (require '[zg.html-renderer       :as html-renderer])
