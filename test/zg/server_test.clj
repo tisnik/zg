@@ -7,7 +7,7 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
 (ns zg.server-test
@@ -85,6 +85,36 @@
     "Check that the zg.server/store-words definition exists."
     (testing "if the zg.server/store-words definition exists."
         (is (callable? 'zg.server/store-words))))
+
+
+(deftest test-add-word-message-existence
+    "Check that the zg.server/add-word-message definition exists."
+    (testing "if the zg.server/add-word-message definition exists."
+        (is (callable? 'zg.server/add-word-message))))
+
+
+(deftest test-add-words-message-existence
+    "Check that the zg.server/add-words-message definition exists."
+    (testing "if the zg.server/add-words-message definition exists."
+        (is (callable? 'zg.server/add-words-message))))
+
+
+(deftest test-split-words-existence
+    "Check that the zg.server/split-words definition exists."
+    (testing "if the zg.server/split-words definition exists."
+        (is (callable? 'zg.server/split-words))))
+
+
+(deftest test-proper-word?-existence
+    "Check that the zg.server/proper-word? definition exists."
+    (testing "if the zg.server/proper-word? definition exists."
+        (is (callable? 'zg.server/proper-word?))))
+
+
+(deftest test-process-add-word-existence
+    "Check that the zg.server/process-add-word definition exists."
+    (testing "if the zg.server/process-add-word definition exists."
+        (is (callable? 'zg.server/process-add-word))))
 
 
 ;
