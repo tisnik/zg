@@ -7,7 +7,7 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
 (ns zg.db-interface
@@ -19,12 +19,14 @@
 (require '[zg.format-date :as format-date])
 
 (defn status->int
+    "Convert word status (:deleted, :undeleted) into an integer."
     [status]
     (if (= status :deleted)
         1
         0))
 
 (defn dictionary-type->char
+    "Convert dictionary type (:whitelist, :blacklist) into an integer."
     [dictionary-type]
     (condp = dictionary-type
         :whitelist "w"
@@ -32,7 +34,7 @@
 
 (defn insert-word-into-dictionary
     "Try to insert new word into the dictionary. If insert fails, exception
-     is thrown and needs to be caught outside this function."
+     is thrown and it needs to be caught outside this function."
     [word description user-name dictionary-type datetime]
     (jdbc/insert! db-spec/zg-db
         :dictionary {:word       word
@@ -43,6 +45,8 @@
                      :description description}))
 
 (defn add-new-word-into-dictionary
+    "Add new word into the dictionary. If the word already exist, it is 
+     simply updated (make sense only for blacklist)."
     ([word user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
         (println "storing" datetime word)
@@ -63,10 +67,12 @@
                         (println e))))))))
 
 (defn set-word-status
+    "Set or change status of given word in the dictionary (:deleted, :undeleted)."
     [word dictionary-type status]
     (try
         (jdbc/update! db-spec/zg-db
-                      :dictionary {:deleted (status->int status)} ["word = ? and dictionary = ?" word (dictionary-type->char dictionary-type)])
+                      :dictionary {:deleted (status->int status)}
+                                   ["word = ? and dictionary = ?" word (dictionary-type->char dictionary-type)])
         (catch Exception e
             (println e)
             [])))
