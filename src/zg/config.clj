@@ -7,7 +7,7 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
 (ns zg.config
@@ -19,17 +19,17 @@
 
 (defn parse-int
     "Parse the given string as an integer number."
-    [string]
+    [^String string]
     (java.lang.Integer/parseInt string))
 
 (defn parse-float
     "Parse the given string as a float number."
-    [string]
+    [^String string]
     (java.lang.Float/parseFloat string))
 
 (defn load-configuration
     "Load configuration from the provided INI file."
-    [ini-file-name]
+    [^String ini-file-name]
     (clojure-ini/read-ini ini-file-name :keywordize? true))
 
 (defn print-configuration
