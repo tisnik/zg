@@ -44,6 +44,12 @@
         :display
         :app-name))
 
+(defn get-emender-page
+    [request]
+    (-> (:configuration request)
+        :display
+        :emender-page))
+
 (defn get-url-prefix
     [request]
     (-> (:configuration request)
@@ -51,7 +57,7 @@
         :url-prefix))
 
 (defn finish-processing
-    [request search-results message title mode]
+    [request search-results message title emender-page mode]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
@@ -61,35 +67,35 @@
         (println word)
         (println search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
     "Function that prepares data for the front page."
-    [request title]
+    [request title emender-page]
     (let [params         (:params request)]
-        (finish-processing request nil nil title :whitelist)))
+        (finish-processing request nil nil title emender-page :whitelist)))
 
 (defn process-whitelist
     "Function that prepares data for the whitelist front page."
-    [request title]
+    [request title emender-page]
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
                              (db-interface/read-words-for-pattern word :whitelist))]
-        (finish-processing request search-results nil title :whitelist)))
+        (finish-processing request search-results nil title emender-page :whitelist)))
 
 (defn process-blacklist
     "Function that prepares data for the blacklist front page."
-    [request title]
+    [request title emender-page]
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
                              (db-interface/read-words-for-pattern word :blacklist))]
-        (finish-processing request search-results nil title :blacklist)))
+        (finish-processing request search-results nil title emender-page :blacklist)))
 
 (defn store-word
     "Store one word into the dictionary."
@@ -133,7 +139,7 @@
 
 (defn process-add-word
     "Add word provided by user (together with its description) to the blacklist."
-    [request title mode]
+    [request title emender-page mode]
     (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
           description (-> (:params request) (get "description") clojure.string/trim)
           proper-word (proper-word? word)
@@ -141,10 +147,10 @@
           message   (add-word-message word proper-word)]
           (if (and proper-word (seq word))
               (store-word word description user-name mode))
-        (finish-processing request nil message title mode)))
+        (finish-processing request nil message title emender-page mode)))
 
 (defn process-add-words
-    [request title mode]
+    [request title emender-page mode]
     (let [input        (-> (:params request) (get "new-words"))
           words        (split-words input)
           proper-words (filter proper-word? words)
@@ -152,7 +158,7 @@
           message      (add-words-message proper-words)]
           (if (seq proper-words)
               (store-words proper-words user-name mode))
-        (finish-processing request nil message title mode)))
+        (finish-processing request nil message title emender-page mode)))
 
 (defn perform-operation
     [request mode]
@@ -167,24 +173,24 @@
 
 (defn process-all-words
     "Read all words from the selected dictionary and display them to user on generated page."
-    [request title mode]
+    [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-all-words mode)]
-        (finish-processing request search-results nil title mode)))
+        (finish-processing request search-results nil title emender-page mode)))
 
 (defn process-deleted-words
     "Read all deleted words from the selected dictionary and display them to user on generated page."
-    [request title mode]
+    [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-deleted-words mode)]
-        (finish-processing request search-results nil title mode)))
+        (finish-processing request search-results nil title emender-page mode)))
 
 (defn process-active-words
     "Read all nondeleted words from the selected dictionary and display them to user on generated page."
-    [request title mode]
+    [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-active-words mode)]
-        (finish-processing request search-results nil title mode)))
+        (finish-processing request search-results nil title emender-page mode)))
 
 (defn read-changes-statistic
     []
@@ -309,25 +315,26 @@
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
     (println-and-flush "request URI: " (request :uri))
-    (let [uri     (request :uri)
-          title   (get-title request)]
+    (let [uri          (request :uri)
+          title        (get-title request)
+          emender-page (get-emender-page request)]
         (condp = uri
             "/favicon.ico"                (return-file "favicon.ico" "image/x-icon")
             "/bootstrap.min.css"          (return-file "bootstrap.min.css" "text/css")
             "/smearch.css"                (return-file "smearch.css" "text/css")
             "/bootstrap.min.js"           (return-file "bootstrap.min.js" "application/javascript")
-            "/"                           (process-front-page    request title)
-            "/whitelist"                  (process-whitelist     request title)
-            "/blacklist"                  (process-blacklist     request title)
-            "/all-words-in-whitelist"     (process-all-words     request title :whitelist)
-            "/all-words-in-blacklist"     (process-all-words     request title :blacklist)
-            "/active-words-in-whitelist"  (process-active-words  request title :whitelist)
-            "/active-words-in-blacklist"  (process-active-words  request title :blacklist)
-            "/deleted-words-in-whitelist" (process-deleted-words request title :whitelist)
-            "/deleted-words-in-blacklist" (process-deleted-words request title :blacklist)
-            "/add-word-to-blacklist"  (process-add-word      request title :blacklist)
+            "/"                           (process-front-page    request title emender-page)
+            "/whitelist"                  (process-whitelist     request title emender-page)
+            "/blacklist"                  (process-blacklist     request title emender-page)
+            "/all-words-in-whitelist"     (process-all-words     request title emender-page :whitelist)
+            "/all-words-in-blacklist"     (process-all-words     request title emender-page :blacklist)
+            "/active-words-in-whitelist"  (process-active-words  request title emender-page :whitelist)
+            "/active-words-in-blacklist"  (process-active-words  request title emender-page :blacklist)
+            "/deleted-words-in-whitelist" (process-deleted-words request title emender-page :whitelist)
+            "/deleted-words-in-blacklist" (process-deleted-words request title emender-page :blacklist)
+            "/add-word-to-blacklist"  (process-add-word      request title emender-page :blacklist)
             ;"/find-words"       (process-find-words    request)
-            "/add-words-to-whitelist" (process-add-words     request title :whitelist)
+            "/add-words-to-whitelist" (process-add-words     request title emender-page :whitelist)
             "/users-whitelist"        (process-user-list     request title :whitelist)
             "/users-blacklist"        (process-user-list     request title :blacklist)
             "/user-whitelist"         (process-user-info     request title :whitelist)
