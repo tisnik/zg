@@ -7,7 +7,7 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
 (ns zg.html-renderer-test
@@ -22,4 +22,38 @@
     "Test if given function-name is bound to the real function."
     [function-name]
     (clojure.test/function? function-name))
+
+;
+; Test for existence of several functions.
+;
+
+(deftest test-render-html-header-existence
+    "Check that the zg.html-renderer/render-html-header definition exists."
+    (testing "if the zg.html-renderer/render-html-header definition exists."
+        (is (callable? 'zg.html-renderer/render-html-header))))
+
+
+(deftest test-render-html-footer-existence
+    "Check that the zg.html-renderer/render-html-footer definition exists."
+    (testing "if the zg.html-renderer/render-html-footer definition exists."
+        (is (callable? 'zg.html-renderer/render-html-footer))))
+
+
+(deftest test-search-href-existence
+    "Check that the zg.html-renderer/search-href definition exists."
+    (testing "if the zg.html-renderer/search-href definition exists."
+        (is (callable? 'zg.html-renderer/search-href))))
+
+
+(deftest test-render-search-field-existence
+    "Check that the zg.html-renderer/render-search-field definition exists."
+    (testing "if the zg.html-renderer/render-search-field definition exists."
+        (is (callable? 'zg.html-renderer/render-search-field))))
+
+
+(deftest test-render-name-field-existence
+    "Check that the zg.html-renderer/render-name-field definition exists."
+    (testing "if the zg.html-renderer/render-name-field definition exists."
+        (is (callable? 'zg.html-renderer/render-name-field))))
+
 
