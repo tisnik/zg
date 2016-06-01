@@ -135,7 +135,11 @@
         (->> (clojure.string/split input #"[\s,\n]")
              (filter seq))))
 
-(defn proper-word?
+(defn proper-word-for-blacklist?
+    [word]
+    (re-matches #"[A-Za-z0-9.'\-\s_/]+" word))
+
+(defn proper-word-for-whitelist?
     [word]
     (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
 
@@ -144,7 +148,7 @@
     [request title emender-page mode]
     (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
           description (-> (:params request) (get "description") clojure.string/trim)
-          proper-word (proper-word? word)
+          proper-word (proper-word-for-blacklist? word)
           user-name (get-user-name request)
           message   (add-word-message word proper-word)]
           (if (and proper-word (seq word))
@@ -155,7 +159,7 @@
     [request title emender-page mode]
     (let [input        (-> (:params request) (get "new-words"))
           words        (split-words input)
-          proper-words (filter proper-word? words)
+          proper-words (filter proper-word-for-whitelist? words)
           user-name    (get-user-name request)
           message      (add-words-message proper-words)]
           (if (seq proper-words)
