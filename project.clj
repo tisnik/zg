@@ -18,6 +18,7 @@
     :dependencies [[org.clojure/clojure "1.6.0"]
                    [org.clojure/java.jdbc "0.3.5"]
                    [org.clojure/tools.cli "0.3.1"]
+                   [org.clojure/data.csv  "0.1.2"]
                    [org.xerial/sqlite-jdbc "3.7.2"]
                    [clojure-ini "0.0.1"]
                    [ring/ring-core "1.3.2"]
