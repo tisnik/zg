@@ -147,6 +147,36 @@
         (is (callable? 'zg.server/process-active-words))))
 
 
+(deftest test-read-changes-statistic-existence
+    "Check that the zg.server/read-changes-statistic definition exists."
+    (testing "if the zg.server/read-changes-statistic definition exists."
+        (is (callable? 'zg.server/read-changes-statistic))))
+
+
+(deftest test-read-changes-existence
+    "Check that the zg.server/read-changes definition exists."
+    (testing "if the zg.server/read-changes definition exists."
+        (is (callable? 'zg.server/read-changes))))
+
+
+(deftest test-read-changes-for-user-existence
+    "Check that the zg.server/read-changes-for-user definition exists."
+    (testing "if the zg.server/read-changes-for-user definition exists."
+        (is (callable? 'zg.server/read-changes-for-user))))
+
+
+(deftest test-process-user-list-existence
+    "Check that the zg.server/process-user-list definition exists."
+    (testing "if the zg.server/process-user-list definition exists."
+        (is (callable? 'zg.server/process-user-list))))
+
+
+(deftest test-process-user-info-existence
+    "Check that the zg.server/process-user-info definition exists."
+    (testing "if the zg.server/process-user-info definition exists."
+        (is (callable? 'zg.server/process-user-info))))
+
+
 ;
 ; Test for function behaviours
 ;
