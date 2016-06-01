@@ -7,19 +7,23 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
-(ns zg.format-date)
+(ns zg.format-date
+    "Functions for working with dates and datetimes.")
 
 (def unified-date-format
+    "Object with the specification how date should be formatted."
     (new java.text.SimpleDateFormat "yyyy-MM-dd HH:mm:ss"))
 
 (defn format-date
+    "Format given date using unified date format."
     [date]
     (.format unified-date-format date))
 
 (defn format-current-date
+    "Format current date using unified date format."
     []
     (format-date (new java.util.Date)))
 
