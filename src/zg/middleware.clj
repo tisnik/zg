@@ -7,13 +7,16 @@
 ;  http://www.eclipse.org/legal/epl-v10.html
 ;
 ;  Contributors:
-;      Pavel Tisnovsky
+;      Pavel Tisnovsky
 ;
 
-(ns zg.middleware)
+(ns zg.middleware
+    "Definition(s) of middleware used by this app with the cooperation with Clojure Ring.")
 
 (defn inject-configuration
-    "Inject configuration structure into the request parameter."
+    "Inject configuration structure into the request parameter.
+     It means that the process request->zg->response could be implemented
+     in functional way."
     [handler configuration]
     (fn [request]
         (handler (assoc request :configuration configuration))))
