@@ -261,6 +261,16 @@
     (with-out-str
         (clojure.pprint/pprint words)))
 
+(defn words->csv
+    [words]
+    (with-out-str
+        (csv/write-csv *out* words)))
+
+(defn words->vector
+    [words]
+    (for [word words]
+        (vals word)))
+
 (defn process-wordlist-json
     [request dictionary-type]
     (let [search-results (db-interface/read-all-words dictionary-type)
@@ -288,6 +298,14 @@
           edn-output     (words->edn search-results)]
         (-> (http-response/response edn-output)
             (http-response/content-type "application/edn"))))
+
+(defn process-wordlist-csv
+    [request dictionary-type]
+    (let [search-results (db-interface/read-all-words dictionary-type)
+          words          (words->vector search-results)
+          csv-output     (words->csv words)]
+        (-> (http-response/response csv-output)
+            (http-response/content-type "text/csv; charset=utf-8"))))
 
 ;defn process-delete-word
 ;   [request]
@@ -349,10 +367,12 @@
             "/whitelist/text"         (process-wordlist-text request :whitelist)
             "/whitelist/xml"          (process-wordlist-xml  request :whitelist)
             "/whitelist/edn"          (process-wordlist-edn  request :whitelist)
+            "/whitelist/csv"          (process-wordlist-csv  request :whitelist)
             "/blacklist/json"         (process-wordlist-json request :blacklist)
             "/blacklist/text"         (process-wordlist-text request :blacklist)
             "/blacklist/xml"          (process-wordlist-xml  request :blacklist)
             "/blacklist/edn"          (process-wordlist-edn  request :blacklist)
+            "/blacklist/csv"          (process-wordlist-csv  request :blacklist)
             ;"/delete-word"           (process-delete-word   request)
             ;"/undelete-word"         (process-undelete-word request)
             )))
