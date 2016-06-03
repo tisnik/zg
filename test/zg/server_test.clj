@@ -183,6 +183,65 @@
         (is (callable? 'zg.server/process-user-info))))
 
 
+(deftest test-words->json-existence
+    "Check that the zg.server/words->json definition exists."
+    (testing "if the zg.server/words->json definition exists."
+        (is (callable? 'zg.server/words->json))))
+
+
+(deftest test-words->text-existence
+    "Check that the zg.server/words->text definition exists."
+    (testing "if the zg.server/words->text definition exists."
+        (is (callable? 'zg.server/words->text))))
+
+
+(deftest test-words->xml-existence
+    "Check that the zg.server/words->xml definition exists."
+    (testing "if the zg.server/words->xml definition exists."
+        (is (callable? 'zg.server/words->xml))))
+
+
+(deftest test-words->edn-existence
+    "Check that the zg.server/words->edn definition exists."
+    (testing "if the zg.server/words->edn definition exists."
+        (is (callable? 'zg.server/words->edn))))
+
+
+(deftest test-process-wordlist-json-existence
+    "Check that the zg.server/process-wordlist-json definition exists."
+    (testing "if the zg.server/process-wordlist-json definition exists."
+        (is (callable? 'zg.server/process-wordlist-json))))
+
+
+(deftest test-process-wordlist-text-existence
+    "Check that the zg.server/process-wordlist-text definition exists."
+    (testing "if the zg.server/process-wordlist-text definition exists."
+        (is (callable? 'zg.server/process-wordlist-text))))
+
+
+(deftest test-process-wordlist-xml-existence
+    "Check that the zg.server/process-wordlist-xml definition exists."
+    (testing "if the zg.server/process-wordlist-xml definition exists."
+        (is (callable? 'zg.server/process-wordlist-xml))))
+
+
+(deftest test-process-wordlist-edn-existence
+    "Check that the zg.server/process-wordlist-edn definition exists."
+    (testing "if the zg.server/process-wordlist-edn definition exists."
+        (is (callable? 'zg.server/process-wordlist-edn))))
+
+
+(deftest test-return-file-existence
+    "Check that the zg.server/return-file definition exists."
+    (testing "if the zg.server/return-file definition exists."
+        (is (callable? 'zg.server/return-file))))
+
+
+(deftest test-handler-existence
+    "Check that the zg.server/handler definition exists."
+    (testing "if the zg.server/handler definition exists."
+        (is (callable? 'zg.server/handler))))
+
 ;
 ; Test for function behaviours
 ;
