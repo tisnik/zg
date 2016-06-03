@@ -57,3 +57,33 @@
         (is (callable? 'zg.html-renderer/render-name-field))))
 
 
+(deftest test-tab-class-existence
+    "Check that the zg.html-renderer/tab-class definition exists."
+    (testing "if the zg.html-renderer/tab-class definition exists."
+        (is (callable? 'zg.html-renderer/tab-class))))
+
+
+(deftest test-user-href-existence
+    "Check that the zg.html-renderer/user-href definition exists."
+    (testing "if the zg.html-renderer/user-href definition exists."
+        (is (callable? 'zg.html-renderer/user-href))))
+
+
+(deftest test-users-href-existence
+    "Check that the zg.html-renderer/users-href definition exists."
+    (testing "if the zg.html-renderer/users-href definition exists."
+        (is (callable? 'zg.html-renderer/users-href))))
+
+
+(deftest test-remember-me-href-existence
+    "Check that the zg.html-renderer/remember-me-href definition exists."
+    (testing "if the zg.html-renderer/remember-me-href definition exists."
+        (is (callable? 'zg.html-renderer/remember-me-href))))
+
+
+(deftest test-render-navigation-bar-section-existence
+    "Check that the zg.html-renderer/render-navigation-bar-section definition exists."
+    (testing "if the zg.html-renderer/render-navigation-bar-section definition exists."
+        (is (callable? 'zg.html-renderer/render-navigation-bar-section))))
+
+
