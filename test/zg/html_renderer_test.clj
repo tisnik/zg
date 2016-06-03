@@ -87,3 +87,30 @@
         (is (callable? 'zg.html-renderer/render-navigation-bar-section))))
 
 
+(deftest test-render-error-page-existence
+    "Check that the zg.html-renderer/render-error-page definition exists."
+    (testing "if the zg.html-renderer/render-error-page definition exists."
+        (is (callable? 'zg.html-renderer/render-error-page))))
+
+
+(deftest test-render-front-page-existence
+    "Check that the zg.html-renderer/render-front-page definition exists."
+    (testing "if the zg.html-renderer/render-front-page definition exists."
+        (is (callable? 'zg.html-renderer/render-front-page))))
+
+
+(deftest test-render-users-existence
+    "Check that the zg.html-renderer/render-users definition exists."
+    (testing "if the zg.html-renderer/render-users definition exists."
+        (is (callable? 'zg.html-renderer/render-users))))
+
+
+(deftest test-render-user-info-existence
+    "Check that the zg.html-renderer/render-user-info definition exists."
+    (testing "if the zg.html-renderer/render-user-info definition exists."
+        (is (callable? 'zg.html-renderer/render-user-info))))
+
+;
+; Test for function behaviours
+;
+
