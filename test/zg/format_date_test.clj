@@ -47,7 +47,8 @@
     (testing "the function zg.format-date/format-date." 
         (let [date (new java.util.Date 116 01 01 12 00)]
             (is (not (nil? (format-date date))))
-            (is (= (type (format-date date)) java.lang.String)))))
+            (is (= (type (format-date date)) java.lang.String))
+            (is (= (count (format-date date)) 19)))))
 
 (deftest test-format-date-2
     "Check the function zg.format-date/format-date"
@@ -58,4 +59,11 @@
             (is (= "2000-02-01 12:00:00" (format-date date))))
         (let [date (new java.util.Date 0 00 01 00 00)]
             (is (= "1900-01-01 00:00:00" (format-date date))))))
+
+(deftest test-format-current-date
+    "Check the function zg.format-date/format-current-date"
+    (testing "the function zg.format-date/format-current-date." 
+        (is (not (nil? (format-current-date))))
+        (is (= (type (format-current-date))))
+        (is (= (count (format-current-date)) 19))))
 
