@@ -172,3 +172,12 @@
         (is (not (nil? (:display cfg))))
         (is (nil? (:other cfg)))))
 
+(deftest test-load-configuration-3
+    "Check the behaviour of function zg.config/load-configuration."
+    (let [cfg (load-configuration "test/test1.ini")]
+        (are [x y] (= x y)
+            (-> cfg :server  :url-prefix)   "/"
+            (-> cfg :display :app-name)     "CCS Custom Dictionary"
+            (-> cfg :display :emender-page) "http://example.com/emender"
+            (-> cfg :display :other) nil)))
+
