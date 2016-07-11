@@ -155,8 +155,13 @@
 
 (deftest test-print-configuration
     "Check the behaviour of function zg.config/print-configuration."
-        ; use mock instead of jdbc/query
+        ; use mock instead of clojure.pprint/pprint
         (with-redefs [pprint/pprint (fn [configuration] (str configuration))]
-            (not (nil? (print-configuration {:first 1 :second 2})))
-            (= (type (print-configuration {:first 1 :second 2})) java.lang.String)))
+            (is (not (nil? (print-configuration {:first 1 :second 2}))))
+            (is (= (type (print-configuration   {:first 1 :second 2})) java.lang.String))))
+
+(deftest test-load-configuration-1
+    "Check the behaviour of function zg.config/load-configuration."
+    (let [cfg (load-configuration "test/test1.ini")]
+        (is (not (nil? cfg)))))
 
