@@ -11,8 +11,9 @@
 ;
 
 (ns zg.config-test
-  (:require [clojure.test :refer :all]
-            [zg.config :refer :all]))
+  (:require [clojure.test   :refer :all]
+            [zg.config      :refer :all]
+            [clojure.pprint :as pprint]))
 
 ;
 ; Common functions used by tests.
@@ -151,4 +152,11 @@
         (parse-float "")
         (parse-float "xyzzy")
         (parse-float "-1xyzzy")))
+
+(deftest test-print-configuration
+    "Check the behaviour of function zg.config/print-configuration."
+        ; use mock instead of jdbc/query
+        (with-redefs [pprint/pprint (fn [configuration] (str configuration))]
+            (not (nil? (print-configuration {:first 1 :second 2})))
+            (= (type (print-configuration {:first 1 :second 2})) java.lang.String)))
 
