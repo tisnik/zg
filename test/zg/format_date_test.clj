@@ -38,3 +38,24 @@
     (testing "if the zg.format-date/format-current-date definition exists."
         (is (callable? 'zg.format-date/format-current-date))))
 
+;
+; Test function behaviours
+;
+
+(deftest test-format-date-1
+    "Check the function zg.format-date/format-date"
+    (testing "the function zg.format-date/format-date." 
+        (let [date (new java.util.Date 116 01 01 12 00)]
+            (is (not (nil? (format-date date))))
+            (is (= (type (format-date date)) java.lang.String)))))
+
+(deftest test-format-date-2
+    "Check the function zg.format-date/format-date"
+    (testing "the function zg.format-date/format-date." 
+        (let [date (new java.util.Date 116 01 01 12 00)]
+            (is (= "2016-02-01 12:00:00" (format-date date))))
+        (let [date (new java.util.Date 100 01 01 12 00)]
+            (is (= "2000-02-01 12:00:00" (format-date date))))
+        (let [date (new java.util.Date 0 00 01 00 00)]
+            (is (= "1900-01-01 00:00:00" (format-date date))))))
+
