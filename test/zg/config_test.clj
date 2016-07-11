@@ -181,3 +181,19 @@
             (-> cfg :display :emender-page) "http://example.com/emender"
             (-> cfg :display :other) nil)))
 
+(deftest test-load-configuration-4
+    "Check the behaviour of function zg.config/load-configuration."
+    (let [cfg (load-configuration "test/test2.ini")]
+        (is (not (nil? (:server cfg))))
+        (is (not (nil? (:display cfg))))
+        (is (nil? (:other cfg)))))
+
+(deftest test-load-configuration-5
+    "Check the behaviour of function zg.config/load-configuration."
+    (let [cfg (load-configuration "test/test2.ini")]
+        (are [x y] (= x y)
+            (-> cfg :server  :url-prefix)   ""
+            (-> cfg :display :app-name)     ""
+            (-> cfg :display :emender-page) ""
+            (-> cfg :display :other) nil)))
+
