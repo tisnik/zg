@@ -165,3 +165,10 @@
     (let [cfg (load-configuration "test/test1.ini")]
         (is (not (nil? cfg)))))
 
+(deftest test-load-configuration-2
+    "Check the behaviour of function zg.config/load-configuration."
+    (let [cfg (load-configuration "test/test1.ini")]
+        (is (not (nil? (:server cfg))))
+        (is (not (nil? (:display cfg))))
+        (is (nil? (:other cfg)))))
+
