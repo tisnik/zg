@@ -25,7 +25,7 @@
     (clojure.test/function? function-name))
 
 ;
-; Tests for various functions
+; Tests for various function definitions
 ;
 
 (deftest test-parse-int-existence
@@ -37,6 +37,11 @@
     "Check that the zg.config/parse-float definition exists."
     (testing "if the zg.config/parse-float definition exists."
         (is (callable? 'zg.config/parse-float))))
+
+(deftest test-parse-boolean-existence
+    "Check that the zg.config/parse-boolean definition exists."
+    (testing "if the zg.config/parse-boolean definition exists."
+        (is (callable? 'zg.config/parse-boolean))))
 
 (deftest test-load-configuration-existence
     "Check that the zg.config/load-configuration definition exists."
