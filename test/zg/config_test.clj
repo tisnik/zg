@@ -57,6 +57,17 @@
 ; Test for function behaviours
 ;
 
+(deftest test-parse-boolean
+    "Check the behaviour of function emender-jenkins.config/parse-boolean."
+    (are [x y] (= x y)
+        true (parse-boolean "true")
+        true (parse-boolean "True")
+        false (parse-boolean "false")
+        false (parse-boolean "False")
+        false (parse-boolean "")
+        false (parse-boolean "unknown")
+        false (parse-boolean nil)))
+
 (deftest test-parse-int-zero
     "Check the behaviour of function zg.config/parse-int."
     (are [x y] (== x y)
