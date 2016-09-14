@@ -127,8 +127,8 @@
                 (is (nil? (get-exception-message e)))))))
 
 (deftest test-third-1
-    "Check the function emender-jenkins.utils/third."
-    (testing "the function emender-jenkins.utils/third."
+    "Check the function zg.utils/third."
+    (testing "the function zg.utils/third."
         (are [x y] (= x y)
             3 (third [1 2 3])
             3 (third [1 2 3 4 5])
@@ -136,21 +136,21 @@
             3 (third '(1 2 3 4 5)))))
 
 (deftest test-third-2
-    "Check the function emender-jenkins.utils/third."
-    (testing "the function emender-jenkins.utils/third."
+    "Check the function zg.utils/third."
+    (testing "the function zg.utils/third."
         (are [x y] (= x y)
             nil (third [1 2])
             nil (third '(1 2)))))
 
 (deftest test-third-not-NPE
-    "Check the function emender-jenkins.utils/third."
-    (testing "the function emender-jenkins.utils/third."
+    "Check the function zg.utils/third."
+    (testing "the function zg.utils/third."
         (are [x y] (= x y)
             nil (third nil))))
 
 (deftest test-substring-1
-    "Check the function emender-jenkins.utils/substring."
-    (testing "the function emender-jenkins.utils/substring."
+    "Check the function zg.utils/substring."
+    (testing "the function zg.utils/substring."
         (are [x y] (= x y)
             "H"      (substring "Hello world!" 0 1)
             "He"     (substring "Hello world!" 0 2)
@@ -158,8 +158,8 @@
             "Hello " (substring "Hello world!" 0 6))))
 
 (deftest test-substring-2
-    "Check the function emender-jenkins.utils/substring."
-    (testing "the function emender-jenkins.utils/substring."
+    "Check the function zg.utils/substring."
+    (testing "the function zg.utils/substring."
         (are [x y] (= x y)
             "w"      (substring "Hello world!" 6 7)
             "wo"     (substring "Hello world!" 6 8)
@@ -167,11 +167,29 @@
             "world!" (substring "Hello world!" 6 12))))
 
 (deftest test-substring-empty-result
-    "Check the function emender-jenkins.utils/substring."
-    (testing "the function emender-jenkins.utils/substring."
+    "Check the function zg.utils/substring."
+    (testing "the function zg.utils/substring."
         (are [x y] (= x y)
             "" (substring "Hello world!" 0 0)
             "" (substring "Hello world!" 1 1)
             "" (substring "Hello world!" 2 2)
             "" (substring "Hello world!" 10 10))))
+
+(deftest test-contains-1
+    "Check the function zg.utils/contains."
+    (testing "the function zg.utils/contains."
+        (are [x y] (= x y)
+            false (contains "Hello world!" "h")
+            true  (contains "Hello world!" "H")
+            true  (contains "Hello world!" " ")
+            true  (contains "Hello world!" "!"))))
+
+(deftest test-contains-2
+    "Check the function zg.utils/contains."
+    (testing "the function zg.utils/contains."
+        (are [x y] (= x y)
+            false (contains "Hello world!" "hello")
+            true  (contains "Hello world!" "Hello")
+            true  (contains "Hello world!" "o w")
+            true  (contains "Hello world!" "world!"))))
 
