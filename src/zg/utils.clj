@@ -10,12 +10,13 @@
 ;      Pavel Tisnovsky
 ;
 
-(ns zg.utils)
+(ns zg.utils
+    "Various utility function used by other modules.")
 
 (defn third
     "Simple utility function - returns third item from a given sequence."
     [coll]
-    (nth coll 2))
+    (nth coll 2 nil))
 
 (defn substring
     "Call method String.substring()."
