@@ -166,6 +166,16 @@
             "world"  (substring "Hello world!" 6 11)
             "world!" (substring "Hello world!" 6 12))))
 
+(deftest test-substring-3
+    "Check the function zg.utils/substring."
+    (testing "the function zg.utils/substring."
+        (are [x y] (= x y)
+            "Hello world!" (substring "Hello world!" 0)
+            "ello world!"  (substring "Hello world!" 1)
+            "world!"       (substring "Hello world!" 6)
+            "!"            (substring "Hello world!" 11)
+            ""             (substring "Hello world!" 12))))
+
 (deftest test-substring-empty-result
     "Check the function zg.utils/substring."
     (testing "the function zg.utils/substring."
