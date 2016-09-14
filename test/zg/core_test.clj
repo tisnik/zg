@@ -32,18 +32,55 @@
     (testing "if the zg.core/start-server definition exists."
         (is (callable? 'zg.core/start-server))))
 
+
 (deftest test-get-and-check-port-existence
     "Check that the zg.core/get-and-check-port definition exists."
     (testing "if the zg.core/get-and-check-port definition exists."
         (is (callable? 'zg.core/get-and-check-port))))
+
 
 (deftest test-get-port-existence
     "Check that the zg.core/get-port definition exists."
     (testing "if the zg.core/get-port definition exists."
         (is (callable? 'zg.core/get-port))))
 
+
 (deftest test--main-existence
     "Check that the zg.core/-main definition exists."
     (testing "if the zg.core/-main definition exists."
         (is (callable? 'zg.core/-main))))
+
+;
+; Tests for function behaviours
+;
+
+(deftest test-get-port
+    "Check the function zg.core/get-port."
+    (testing "the function zg.core/get-port."
+        (is (= (get-port "1")     "1"))
+        (is (= (get-port "2")     "2"))
+        (is (= (get-port "3000")  "3000"))
+        (is (= (get-port "65534") "65534"))
+        (is (= (get-port "65535") "65535"))))
+
+(deftest test-get-port-special-cases
+    "Check the function zg.core/get-port."
+    (testing "the function zg.core/get-port."
+        (is (= (get-port nil)     "3000"))
+        (is (= (get-port "")      "3000"))
+        (is (= (get-port 0)       "3000"))
+        (is (= (get-port 1)       "3000"))
+        (is (= (get-port 65535)   "3000"))
+        (is (= (get-port 65536)   "3000"))))
+
+(deftest test-get-port-negative
+    "Check the function zg.core/get-port."
+    (testing "the function zg.core/get-port."
+        (is (thrown? AssertionError (get-port "0")))
+        (is (thrown? AssertionError (get-port "-1")))
+        (is (thrown? AssertionError (get-port "-2")))
+        (is (thrown? AssertionError (get-port "65536")))
+        (is (thrown? AssertionError (get-port "65537")))
+        (is (thrown? AssertionError (get-port "1000000")))))
+
 
