@@ -27,3 +27,44 @@
 ; Tests for various functions existence
 ;
 
+(deftest test-third-existence
+    "Check that the zg.utils/third definition exists."
+    (testing "if the zg.utils/third definition exists."
+        (is (callable? 'zg.utils/third))))
+
+
+(deftest test-substring-existence
+    "Check that the zg.utils/substring definition exists."
+    (testing "if the zg.utils/substring definition exists."
+        (is (callable? 'zg.utils/substring))))
+
+
+(deftest test-startsWith-existence
+    "Check that the zg.utils/startsWith definition exists."
+    (testing "if the zg.utils/startsWith definition exists."
+        (is (callable? 'zg.utils/startsWith))))
+
+
+(deftest test-endsWith-existence
+    "Check that the zg.utils/endsWith definition exists."
+    (testing "if the zg.utils/endsWith definition exists."
+        (is (callable? 'zg.utils/endsWith))))
+
+
+(deftest test-contains-existence
+    "Check that the zg.utils/contains definition exists."
+    (testing "if the zg.utils/contains definition exists."
+        (is (callable? 'zg.utils/contains))))
+
+
+(deftest test-replaceAll-existence
+    "Check that the zg.utils/replaceAll definition exists."
+    (testing "if the zg.utils/replaceAll definition exists."
+        (is (callable? 'zg.utils/replaceAll))))
+
+
+(deftest test-get-exception-message-existence
+    "Check that the zg.utils/get-exception-message definition exists."
+    (testing "if the zg.utils/get-exception-message definition exists."
+        (is (callable? 'zg.utils/get-exception-message))))
+
