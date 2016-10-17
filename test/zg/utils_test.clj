@@ -221,3 +221,28 @@
         (is (thrown? NullPointerException (contains "" nil)))
         (is (thrown? NullPointerException (contains nil nil)))))
 
+(deftest test-starts-with-1
+    "Check the function zg.utils/starts-with."
+    (testing "the function zg.utils/starts-with."
+        (are [x y] (= x y)
+            false (startsWith "Hello world!" "hello")
+            true  (startsWith "Hello world!" "Hello")
+            true  (startsWith "Hello world!" "H")
+            true  (startsWith "Hello world!" ""))))
+
+(deftest test-starts-with-2
+    "Check the function zg.utils/starts-with."
+    (testing "the function zg.utils/starts-with."
+        (are [x y] (= x y)
+            false (startsWith "" "hello")
+            false (startsWith "" "Hello")
+            false (startsWith "" "H")
+            true  (startsWith "" ""))))
+
+(deftest test-starts-with-NPE
+    "Check the function zg.utils/starts-with."
+    (testing "the function zg.utils/starts-with."
+        (is (thrown? NullPointerException (startsWith nil nil)))
+        (is (thrown? NullPointerException (startsWith "text" nil)))
+        (is (thrown? NullPointerException (startsWith nil "text")))))
+
