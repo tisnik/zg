@@ -129,3 +129,9 @@
             "test/expected/html_header7.html" (page/xhtml (render-html-header "word" "http://10.20.30.40/" ""))
             "test/expected/html_header8.html" (page/xhtml (render-html-header "word" "http://10.20.30.40/" "title")))))
 
+(deftest test-render-html-footer
+    "Checking the function zg.html-renderer/render-html-footer."
+    (testing "the function zg.html-renderer/render-html-footer."
+        (spit "test/expected/html_footer1.html" (page/xhtml (render-html-footer)))
+        (is (= (slurp "test/expected/html_footer1.html") (page/xhtml (render-html-footer))))))
+
