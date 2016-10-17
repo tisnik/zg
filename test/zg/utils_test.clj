@@ -214,3 +214,10 @@
             true  (contains "Hello world!" "o w")
             true  (contains "Hello world!" "world!"))))
 
+(deftest test-contains-NPE
+    "Check the function zg.utils/contains."
+    (testing "the function zg.utils/contains."
+        (is (thrown? NullPointerException (contains nil "")))
+        (is (thrown? NullPointerException (contains "" nil)))
+        (is (thrown? NullPointerException (contains nil nil)))))
+
