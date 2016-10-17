@@ -14,6 +14,8 @@
   (:require [clojure.test :refer :all]
             [zg.html-renderer :refer :all]))
 
+(require '[hiccup.page :as page])
+
 ;
 ; Common functions used by tests.
 ;
@@ -113,4 +115,17 @@
 ;
 ; Test for function behaviours
 ;
+
+(deftest test-render-html-header
+    "Checking the function zg.html-renderer/render-html-header."
+    (testing "the function zg.html-renderer/render-html-header."
+        (are [x y] (= (slurp x) y)
+            "test/expected/html_header1.html" (page/xhtml (render-html-header "" "" ""))
+            "test/expected/html_header2.html" (page/xhtml (render-html-header "" "" "title"))
+            "test/expected/html_header3.html" (page/xhtml (render-html-header "" "http://10.20.30.40/" ""))
+            "test/expected/html_header4.html" (page/xhtml (render-html-header "" "http://10.20.30.40/" "title"))
+            "test/expected/html_header5.html" (page/xhtml (render-html-header "word" "" ""))
+            "test/expected/html_header6.html" (page/xhtml (render-html-header "word" "" "title"))
+            "test/expected/html_header7.html" (page/xhtml (render-html-header "word" "http://10.20.30.40/" ""))
+            "test/expected/html_header8.html" (page/xhtml (render-html-header "word" "http://10.20.30.40/" "title")))))
 
