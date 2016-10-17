@@ -246,3 +246,28 @@
         (is (thrown? NullPointerException (startsWith "text" nil)))
         (is (thrown? NullPointerException (startsWith nil "text")))))
 
+(deftest test-ends-with-1 "Check the function zg.utils/ends-with."
+    (testing "the function zg.utils/ends-with."
+        (are [x y] (= x y)
+            true  (endsWith "Hello world!" "Hello world!")
+            false (endsWith "Hello world!" "hello world!")
+            true  (endsWith "Hello world!" "world!")
+            true  (endsWith "Hello world!" "!")
+            true  (endsWith "Hello world!" ""))))
+
+(deftest test-ends-with-2
+    "Check the function zg.utils/ends-with."
+    (testing "the function zg.utils/ends-with."
+        (are [x y] (= x y)
+            false (endsWith "" "hello")
+            false (endsWith "" "Hello")
+            false (endsWith "" "H")
+            true  (endsWith "" ""))))
+
+(deftest test-ends-with-NPE
+    "Check the function zg.utils/ends-with."
+    (testing "the function zg.utils/ends-with."
+        (is (thrown? NullPointerException (endsWith nil nil)))
+        (is (thrown? NullPointerException (endsWith "text" nil)))
+        (is (thrown? NullPointerException (endsWith nil "text")))))
+
