@@ -132,6 +132,18 @@
 (deftest test-render-html-footer
     "Checking the function zg.html-renderer/render-html-footer."
     (testing "the function zg.html-renderer/render-html-footer."
-        (spit "test/expected/html_footer1.html" (page/xhtml (render-html-footer)))
         (is (= (slurp "test/expected/html_footer1.html") (page/xhtml (render-html-footer))))))
+
+(deftest test-render-search-href
+    "Checking the function zg.html-renderer/render-search-href."
+    (testing "the function zg.html-renderer/render-search-href."
+        (are [x y] (= (slurp x) y)
+            "test/expected/search-href1.html" (search-href "" :whitelist)
+            "test/expected/search-href2.html" (search-href "" :blacklist)
+            "test/expected/search-href3.html" (search-href "/" :whitelist)
+            "test/expected/search-href4.html" (search-href "/" :blacklist)
+            "test/expected/search-href5.html" (search-href "http://10.20.30.40/" :whitelist)
+            "test/expected/search-href6.html" (search-href "http://10.20.30.40/" :blacklist)
+            "test/expected/search-href7.html" (search-href "http://10.20.30.40/zg/" :whitelist)
+            "test/expected/search-href8.html" (search-href "http://10.20.30.40/zg/" :blacklist))))
 
