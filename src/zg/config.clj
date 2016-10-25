@@ -13,9 +13,9 @@
 (ns zg.config
     "Module that contains all functions required to to load configuration from the INI file.")
 
-(require '[clojure.pprint :as pprint])
-
-(require '[clojure-ini.core :as clojure-ini])
+(require '[clojure.pprint         :as pprint])
+(require '[clojure.tools.logging  :as log])
+(require '[clojure-ini.core       :as clojure-ini])
 
 (defn parse-int
     "Parse the given string as an integer number."

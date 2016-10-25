@@ -13,7 +13,8 @@
 (ns zg.db-interface
     "Namespace that contains interface to the database.")
 
-(require '[clojure.java.jdbc       :as jdbc])
+(require '[clojure.java.jdbc     :as jdbc])
+(require '[clojure.tools.logging :as log])
 
 (require '[zg.db-spec     :as db-spec])
 (require '[zg.format-date :as format-date])
@@ -49,14 +50,14 @@
      simply updated (make sense only for blacklist)."
     ([word user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
-        (println "storing" datetime word)
+        (log/info "storing" datetime word)
         (try
             (insert-word-into-dictionary word nil user-name dictionary-type datetime)
             (catch Exception e
-                (println e)))))
+                (log/error e "insert word into dictionary")))))
     ([word description user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
-        (println "storing" datetime word)
+        (log/info "storing" datetime word)
         (try
             (insert-word-into-dictionary word description user-name dictionary-type datetime)
             (catch Exception e
@@ -64,7 +65,7 @@
                     (jdbc/update! db-spec/zg-db
                           :dictionary {:description description} ["word=?" word])
                     (catch Exception e
-                        (println e))))))))
+                        (log/error e "insert word into dictionary"))))))))
 
 (defn set-word-status
     "Set or change status of given word in the dictionary (:deleted, :undeleted)."
@@ -74,7 +75,7 @@
                       :dictionary {:deleted (status->int status)}
                                    ["word = ? and dictionary = ?" word (dictionary-type->char dictionary-type)])
         (catch Exception e
-            (println e)
+            (log/error e "set/update word status")
             [])))
 
 (defn delete-word
@@ -100,7 +101,7 @@
             (jdbc/query db-spec/zg-db
                 ["select * from dictionary order by word"]))
         (catch Exception e
-            (println e)
+            (log/error e "read all words")
             [])))
 
 (defn read-words-for-pattern
@@ -112,7 +113,7 @@
                         ["select * from dictionary where word like ? and dictionary=? order by word"
                         (str "%" pattern "%") (dictionary-type->char dictionary-type)])
         (catch Exception e
-            (println e)
+            (log/error e "read words for given pattern" pattern)
             nil)))
 
 (defn read-words-with-status
@@ -124,7 +125,7 @@
                         ["select * from dictionary where deleted = ? and dictionary=? order by word"
                         (status->int status) (dictionary-type->char dictionary-type)])
         (catch Exception e
-            (println e)
+            (log/error e "read words with given status" status)
             [])))
 
 (defn read-deleted-words
@@ -146,7 +147,7 @@
         (jdbc/query db-spec/zg-db
                         ["select user, count(*) as cnt from dictionary group by user order by cnt desc"])
         (catch Exception e
-            (println e)
+            (log/error e "read changes statistic")
             [])))
 
 (defn read-changes
@@ -156,7 +157,7 @@
         (jdbc/query db-spec/zg-db
                         ["select * from dictionary order by datetime"])
         (catch Exception e
-            (println e)
+            (log/error e "read changes")
             [])))
 
 (defn read-changes-for-user
@@ -166,6 +167,6 @@
         (jdbc/query db-spec/zg-db
                         ["select * from dictionary where user=? order by datetime" user-name])
         (catch Exception e
-            (println e)
+            (log/error e "read changes for user" user-name)
             [])))
 
