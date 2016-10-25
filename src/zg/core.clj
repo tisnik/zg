@@ -18,6 +18,7 @@
 (require '[ring.middleware.cookies :as cookies])
 
 (require '[clojure.tools.cli       :as cli])
+(require '[clojure.tools.logging   :as log])
 
 (require '[zg.server               :as server])
 (require '[zg.config               :as config])
@@ -45,7 +46,7 @@
 (defn start-server
     "Start the HTTP server on the specified port."
     [port]
-    (println "Starting the server at the port: " port)
+    (log/info "Starting the server at the port: " port)
     (jetty/run-jetty app {:port (read-string port)}))
 
 (defn get-and-check-port
