@@ -29,9 +29,9 @@
           new-user-name (get params "user-name")
           old-user-name (get (get cookies "user-name") :value)
           user-name     (or new-user-name old-user-name)]
-        (println "old" old-user-name)
-        (println "new" new-user-name)
-        (println "-> " user-name)
+        (log/info "old user name" old-user-name)
+        (log/info "new user name" new-user-name)
+        (log/info "effective -> " user-name)
         user-name))
 
 (defn get-title
@@ -61,7 +61,7 @@
           url-prefix    (get-url-prefix request)]
         (log/info "Incoming cookies: " cookies)
         (log/info "Word to search: " word)
-        (log/info "Search results: " search-results)
+        (log/trace "Search results: " search-results)
         (if user-name
             (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
@@ -96,14 +96,14 @@
 (defn store-word
     "Store one word into the dictionary."
     [word description user-name dictionary-type]
-    (println "About to store following word:" word " with description: " description
+    (log/info "About to store following word:" word " with description: " description
              " into dictionary: " (str dictionary-type))
     (db-interface/add-new-word-into-dictionary word description (or user-name "(*unknown*)") dictionary-type))
 
 (defn store-words
     "Store sequence of words into the dictionary."
     [words user-name dictionary-type]
-    (println "About to store following words:" words)
+    (log/info "About to store following words:" words)
     (doseq [word words]
         (db-interface/add-new-word-into-dictionary word user-name dictionary-type)))
 
@@ -164,8 +164,8 @@
     [request mode]
     (let [to-delete   (-> (:params request) (get "delete"))
           to-undelete (-> (:params request) (get "undelete"))]
-          (println "to delete" to-delete)
-          (println "to undelete" to-undelete)
+          (log/info "to delete" to-delete)
+          (log/info "to undelete" to-undelete)
           (if to-delete
               (db-interface/delete-word to-delete mode))
           (if to-undelete
@@ -210,8 +210,8 @@
           changes           (read-changes)
           user-name         (get-user-name request)
           url-prefix        (get-url-prefix request)]
-        (println "stat"    changes-statistic)
-        (println "changes" changes)
+        (log/info "stat"    changes-statistic)
+        (log/info "changes" changes)
         (if user-name
             (-> (http-response/response (html-renderer/render-users user-name changes-statistic changes url-prefix title mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
@@ -267,7 +267,7 @@
 (defn words->vector
     [words]
     (for [word words]
-        (vals word)))
+            (vals word)))
 
 (defn process-wordlist-json
     [request dictionary-type]
