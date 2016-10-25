@@ -17,16 +17,10 @@
 (require '[clojure.data.json      :as json])
 (require '[clojure.xml            :as xml])
 (require '[clojure.data.csv       :as csv])
+(require '[clojure.tools.logging  :as log])
 
 (require '[zg.db-interface        :as db-interface])
 (require '[zg.html-renderer       :as html-renderer])
-
-(defn println-and-flush
-    "Original (println) has problem with syncing when it's called from more threads.
-     This function is a bit better because it flushes all output immediatelly."
-    [& more]
-    (.write *out* (str (clojure.string/join " " more) "\n"))
-    (flush))
 
 (defn get-user-name
     [request]
@@ -65,9 +59,9 @@
           word          (get params "word")
           user-name     (get-user-name request)
           url-prefix    (get-url-prefix request)]
-        (println-and-flush "Incoming cookies: " cookies)
-        (println word)
-        (println search-results)
+        (log/info "Incoming cookies: " cookies)
+        (log/info "Word to search: " word)
+        (log/info "Search results: " search-results)
         (if user-name
             (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
@@ -329,16 +323,16 @@
      Special value nil / HTTP response 404 is returned in case of any I/O error."
     [file-name content-type]
     (let [file (new java.io.File "www" file-name)]
-        (println-and-flush "Returning file " (.getAbsolutePath file))
+        (log/info "Returning file " (.getAbsolutePath file))
         (if (.exists file)
             (-> (http-response/response file)
                 (http-response/content-type content-type))
-            (println-and-flush "return-file(): can not access file: " (.getName file)))))
+            (log/error "return-file(): can not access file: " (.getName file)))))
 
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
-    (println-and-flush "request URI: " (request :uri))
+    (log/info "request URI: " (request :uri))
     (let [uri          (request :uri)
           title        (get-title request)
           emender-page (get-emender-page request)]
