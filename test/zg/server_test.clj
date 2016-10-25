@@ -27,12 +27,6 @@
 ; Tests for various functions existence
 ;
 
-(deftest test-println-and-flush-existence
-    "Check that the zg.server/println-and-flush definition exists."
-    (testing "if the zg.server/println-and-flush definition exists."
-        (is (callable? 'zg.server/println-and-flush))))
-
-
 (deftest test-get-user-name-existence
     "Check that the zg.server/get-user-name definition exists."
     (testing "if the zg.server/get-user-name definition exists."
