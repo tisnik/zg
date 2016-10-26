@@ -27,11 +27,12 @@
         0))
 
 (defn dictionary-type->char
-    "Convert dictionary type (:whitelist, :blacklist) into an integer."
+    "Convert dictionary type (:whitelist, :blacklist) into a one character."
     [dictionary-type]
     (condp = dictionary-type
         :whitelist "w"
-        :blacklist "b"))
+        :blacklist "b"
+                   "o"))
 
 (defn insert-word-into-dictionary
     "Try to insert new word into the dictionary. If insert fails, exception
