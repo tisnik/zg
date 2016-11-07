@@ -33,6 +33,12 @@
         (is (callable? 'zg.utils/third))))
 
 
+(deftest test-fourth-existence
+    "Check that the zg.utils/fourth definition exists."
+    (testing "if the zg.utils/fourth definition exists."
+        (is (callable? 'zg.utils/fourth))))
+
+
 (deftest test-substring-existence
     "Check that the zg.utils/substring definition exists."
     (testing "if the zg.utils/substring definition exists."
