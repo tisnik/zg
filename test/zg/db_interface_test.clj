@@ -11,8 +11,9 @@
 ;
 
 (ns zg.db-interface-test
-  (:require [clojure.test :refer :all]
-            [zg.db-interface :refer :all]))
+  (:require [clojure.test      :refer :all]
+            [clojure.java.jdbc :as jdbc]
+            [zg.db-interface   :refer :all]))
 
 ;
 ; Common functions used by tests.
@@ -115,4 +116,24 @@
     "Check that the zg.db-interface/read-changes-for-user definition exists."
     (testing "if the zg.db-interface/read-changes-for-user definition exists."
         (is (callable? 'zg.db-interface/read-changes-for-user))))
+
+;
+; Test function behaviour
+;
+
+(deftest test-status->int
+    "Checking the function status->int."
+    (testing "the function status->int."
+        (are [x y] (= x (status->int y))
+            1 :deleted
+            0 :undeleted
+            0 nil)))
+
+(deftest test-dictionary-type->char
+    "Checking the function dictionary-type->char."
+    (testing "the function dictionary-type->char."
+        (are [x y] (= x (dictionary-type->char y))
+            "w" :whitelist
+            "b" :blacklist
+            "o" :other)))
 
