@@ -19,8 +19,9 @@
 
 (defn format-date
     "Format given date using unified date format."
-    [date]
-    (.format unified-date-format date))
+    [^java.util.Date date]
+    (let [^java.text.DateFormat format-object unified-date-format]
+        (.format format-object date)))
 
 (defn format-current-date
     "Format current date using unified date format."
