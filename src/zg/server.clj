@@ -321,7 +321,7 @@
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
-    [file-name content-type]
+    [^String file-name content-type]
     (let [file (new java.io.File "www" file-name)]
         (log/info "Returning file " (.getAbsolutePath file))
         (if (.exists file)
