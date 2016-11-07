@@ -122,3 +122,13 @@
             (is (= app (start-server "65534")))
             (is (= app (start-server "65535"))))))
 
+(deftest test-start-server-wrong-port-number
+    (testing "zg.core/start-server"
+        ; use mock instead of jetty/run-jetty
+        (with-redefs [jetty/run-jetty (fn [app port] port)]
+            (is (= {:port -1}      (start-server "-1")))
+            (is (= {:port 0}       (start-server "0")))
+            (is (= {:port 65536}   (start-server "65536")))
+            (is (= {:port 65537}   (start-server "65537")))
+            (is (= {:port 1000000} (start-server "1000000"))))))
+
