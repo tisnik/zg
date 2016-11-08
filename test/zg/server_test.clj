@@ -246,6 +246,15 @@
         (are [x y] (= x (get-user-name y))
             nil nil)))
 
+(deftest test-get-user-name
+    "Check the function get-user-name."
+    (testing "the function get-user-name."
+        (are [x y] (= x (get-user-name y))
+            "new user" {:params  {"user-name" "new user"}}
+            "new user" {:params  {"user-name" "new user"}
+                        :cookies {"user-name" {:value "old user"}}}
+            "old user" {:cookies {"user-name" {:value "old user"}}})))
+
 (deftest test-get-title
     "Check the function get-title."
     (testing "the function get-title."
