@@ -147,3 +147,16 @@
             "test/expected/search-href7.html" (search-href "http://10.20.30.40/zg/" :whitelist)
             "test/expected/search-href8.html" (search-href "http://10.20.30.40/zg/" :blacklist))))
 
+(deftest test-render-search-field
+    "Checking the function zg.html-renderer/render-search-field."
+    (testing "the function zg.html-renderer/render-search-field."
+        (are [x y] (= (slurp x) y)
+            "test/expected/search-field1.html" (page/xhtml (render-search-field "word" "" :whitelist))
+            "test/expected/search-field2.html" (page/xhtml (render-search-field "word" "" :blacklist))
+            "test/expected/search-field3.html" (page/xhtml (render-search-field "word" "/" :whitelist))
+            "test/expected/search-field4.html" (page/xhtml (render-search-field "word" "/" :blacklist))
+            "test/expected/search-field5.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/" :whitelist))
+            "test/expected/search-field6.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/" :blacklist))
+            "test/expected/search-field7.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/zg/" :whitelist))
+            "test/expected/search-field8.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/zg/" :blacklist)))))
+
