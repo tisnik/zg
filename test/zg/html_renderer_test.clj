@@ -160,3 +160,12 @@
             "test/expected/search-field7.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/zg/" :whitelist))
             "test/expected/search-field8.html" (page/xhtml (render-search-field "word" "http://10.20.30.40/zg/" :blacklist)))))
 
+(deftest test-render-name-field
+    "Checking the function zg.html-renderer/render-name-field."
+    (testing "the function zg.html-renderer/render-name-field."
+        (are [x y] (= (slurp x) y)
+            "test/expected/name-field1.html" (page/xhtml (render-name-field "user name" ""))
+            "test/expected/name-field3.html" (page/xhtml (render-name-field "user name" "/"))
+            "test/expected/name-field5.html" (page/xhtml (render-name-field "user name" "http://10.20.30.40/"))
+            "test/expected/name-field7.html" (page/xhtml (render-name-field "user name" "http://10.20.30.40/zg/")))))
+
