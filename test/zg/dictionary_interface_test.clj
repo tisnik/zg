@@ -23,3 +23,31 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions existence
+;
+
+(deftest test-proper-word-for-whitelist?-existence
+    "Check that the zg.dictionary-interface/proper-word-for-whitelist? definition exists."
+    (testing "if the zg.dictionary-interface/proper-word-for-whitelist? definition exists."
+        (is (callable? 'zg.dictionary-interface/proper-word-for-whitelist?))))
+
+
+(deftest test-proper-word-for-blacklist?-existence
+    "Check that the zg.dictionary-interface/proper-word-for-blacklist? definition exists."
+    (testing "if the zg.dictionary-interface/proper-word-for-blacklist? definition exists."
+        (is (callable? 'zg.dictionary-interface/proper-word-for-blacklist?))))
+
+
+(deftest test-store-word-existence
+    "Check that the zg.dictionary-interface/store-word definition exists."
+    (testing "if the zg.dictionary-interface/store-word definition exists."
+        (is (callable? 'zg.dictionary-interface/store-word))))
+
+
+(deftest test-store-words-existence
+    "Check that the zg.dictionary-interface/store-words definition exists."
+    (testing "if the zg.dictionary-interface/store-words definition exists."
+        (is (callable? 'zg.dictionary-interface/store-words))))
+
+

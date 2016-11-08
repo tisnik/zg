@@ -69,18 +69,6 @@
         (is (callable? 'zg.server/process-blacklist))))
 
 
-(deftest test-store-word-existence
-    "Check that the zg.server/store-word definition exists."
-    (testing "if the zg.server/store-word definition exists."
-        (is (callable? 'zg.server/store-word))))
-
-
-(deftest test-store-words-existence
-    "Check that the zg.server/store-words definition exists."
-    (testing "if the zg.server/store-words definition exists."
-        (is (callable? 'zg.server/store-words))))
-
-
 (deftest test-add-word-message-existence
     "Check that the zg.server/add-word-message definition exists."
     (testing "if the zg.server/add-word-message definition exists."
@@ -97,18 +85,6 @@
     "Check that the zg.server/split-words definition exists."
     (testing "if the zg.server/split-words definition exists."
         (is (callable? 'zg.server/split-words))))
-
-
-(deftest test-proper-word-for-whitelist?-existence
-    "Check that the zg.server/proper-word-for-whitelist? definition exists."
-    (testing "if the zg.server/proper-word-for-whitelist? definition exists."
-        (is (callable? 'zg.server/proper-word-for-whitelist?))))
-
-
-(deftest test-proper-word-for-blacklist?-existence
-    "Check that the zg.server/proper-word-for-blacklist? definition exists."
-    (testing "if the zg.server/proper-word-for-blacklist? definition exists."
-        (is (callable? 'zg.server/proper-word-for-blacklist?))))
 
 
 (deftest test-process-add-word-existence
