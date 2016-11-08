@@ -240,6 +240,12 @@
 ; Test for function behaviours
 ;
 
+(deftest test-get-user-name-not-NPE
+    "Check the function get-user-name."
+    (testing "the function get-user-name."
+        (are [x y] (= x (get-user-name y))
+            nil nil)))
+
 (deftest test-get-title
     "Check the function get-title."
     (testing "the function get-title."
