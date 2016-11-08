@@ -13,3 +13,29 @@
 (ns zg.dictionary-interface
     "Functions providing dictionary interface.")
 
+(require '[clojure.tools.logging   :as log])
+
+(require '[zg.db-interface         :as db-interface])
+
+(defn proper-word-for-blacklist?
+    [word]
+    (re-matches #"[A-Za-z0-9.'\-\s_/]+" word))
+
+(defn proper-word-for-whitelist?
+    [word]
+    (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
+
+(defn store-word
+    "Store one word into the dictionary."
+    [word description user-name dictionary-type]
+    (log/info "About to store following word:" word " with description: " description
+             " into dictionary: " (str dictionary-type))
+    (db-interface/add-new-word-into-dictionary word description (or user-name "(*unknown*)") dictionary-type))
+
+(defn store-words
+    "Store sequence of words into the dictionary."
+    [words user-name dictionary-type]
+    (log/info "About to store following words:" words)
+    (doseq [word words]
+        (db-interface/add-new-word-into-dictionary word user-name dictionary-type)))
+

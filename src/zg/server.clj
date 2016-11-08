@@ -13,14 +13,15 @@
 (ns zg.server
     "Server module with functions to accept requests and send response back to users via HTTP.")
 
-(require '[ring.util.response     :as http-response])
-(require '[clojure.data.json      :as json])
-(require '[clojure.xml            :as xml])
-(require '[clojure.data.csv       :as csv])
-(require '[clojure.tools.logging  :as log])
+(require '[ring.util.response      :as http-response])
+(require '[clojure.data.json       :as json])
+(require '[clojure.xml             :as xml])
+(require '[clojure.data.csv        :as csv])
+(require '[clojure.tools.logging   :as log])
 
-(require '[zg.db-interface        :as db-interface])
-(require '[zg.html-renderer       :as html-renderer])
+(require '[zg.db-interface         :as db-interface])
+(require '[zg.html-renderer        :as html-renderer])
+(require '[zg.dictionary-interface :as dictionary-interface])
 
 (defn get-user-name
     [request]
@@ -93,20 +94,6 @@
                              (db-interface/read-words-for-pattern word :blacklist))]
         (finish-processing request search-results nil title emender-page :blacklist)))
 
-(defn store-word
-    "Store one word into the dictionary."
-    [word description user-name dictionary-type]
-    (log/info "About to store following word:" word " with description: " description
-             " into dictionary: " (str dictionary-type))
-    (db-interface/add-new-word-into-dictionary word description (or user-name "(*unknown*)") dictionary-type))
-
-(defn store-words
-    "Store sequence of words into the dictionary."
-    [words user-name dictionary-type]
-    (log/info "About to store following words:" words)
-    (doseq [word words]
-        (db-interface/add-new-word-into-dictionary word user-name dictionary-type)))
-
 (defn add-word-message
     [word proper-word]
     (if (seq word)
@@ -129,35 +116,27 @@
         (->> (clojure.string/split input #"[\s,\n]")
              (filter seq))))
 
-(defn proper-word-for-blacklist?
-    [word]
-    (re-matches #"[A-Za-z0-9.'\-\s_/]+" word))
-
-(defn proper-word-for-whitelist?
-    [word]
-    (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
-
 (defn process-add-word
     "Add word provided by user (together with its description) to the blacklist."
     [request title emender-page mode]
     (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
           description (-> (:params request) (get "description") clojure.string/trim)
-          proper-word (proper-word-for-blacklist? word)
+          proper-word (dictionary-interface/proper-word-for-blacklist? word)
           user-name (get-user-name request)
           message   (add-word-message word proper-word)]
           (if (and proper-word (seq word))
-              (store-word word description user-name mode))
+              (dictionary-interface/store-word word description user-name mode))
         (finish-processing request nil message title emender-page mode)))
 
 (defn process-add-words
     [request title emender-page mode]
     (let [input        (-> (:params request) (get "new-words"))
           words        (split-words input)
-          proper-words (filter proper-word-for-whitelist? words)
+          proper-words (filter dictionary-interface/proper-word-for-whitelist? words)
           user-name    (get-user-name request)
           message      (add-words-message proper-words)]
           (if (seq proper-words)
-              (store-words proper-words user-name mode))
+              (dictionary-interface/store-words proper-words user-name mode))
         (finish-processing request nil message title emender-page mode)))
 
 (defn perform-operation
