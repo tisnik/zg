@@ -169,3 +169,16 @@
             "test/expected/name-field5.html" (page/xhtml (render-name-field "user name" "http://10.20.30.40/"))
             "test/expected/name-field7.html" (page/xhtml (render-name-field "user name" "http://10.20.30.40/zg/")))))
 
+(deftest test-tab-class
+    "Checking the function zg.html-renderer/tab-class."
+    (testing "the function zg.html-renderer/tab-class."
+        (are [x y] (= x y)
+            {:class "active"} (tab-class 1 1)
+            {:class "active"} (tab-class true true)
+            {:class "active"} (tab-class "word" "word")
+            nil               (tab-class 1 2)
+            nil               (tab-class true false)
+            nil               (tab-class "word" "world"))))
+
+
+
