@@ -217,14 +217,14 @@
 ;
 
 (deftest test-get-user-name-not-NPE
-    "Check the function get-user-name."
-    (testing "the function get-user-name."
+    "Check the function zg.server/get-user-name."
+    (testing "the function zg.server/get-user-name."
         (are [x y] (= x (get-user-name y))
             nil nil)))
 
 (deftest test-get-user-name
-    "Check the function get-user-name."
-    (testing "the function get-user-name."
+    "Check the function zg.server/get-user-name."
+    (testing "the function zg.server/get-user-name."
         (are [x y] (= x (get-user-name y))
             "new user" {:params  {"user-name" "new user"}}
             "new user" {:params  {"user-name" "new user"}
@@ -232,8 +232,8 @@
             "old user" {:cookies {"user-name" {:value "old user"}}})))
 
 (deftest test-get-title
-    "Check the function get-title."
-    (testing "the function get-title."
+    "Check the function zg.server/get-title."
+    (testing "the function zg.server/get-title."
         (are [x y] (= x (get-title y))
             "ZG" {:configuration {:display {:app-name "ZG"}}}
             nil  {:configuration {:display {:app-name nil}}}
@@ -244,8 +244,8 @@
             nil  nil)))
 
 (deftest test-get-emender-page
-    "Check the function get-emender-page."
-    (testing "the function get-emender-page."
+    "Check the function zg.server/get-emender-page."
+    (testing "the function zg.server/get-emender-page."
         (are [x y] (= x (get-emender-page y))
             "http://www.emender.org" {:configuration {:display {:emender-page "http://www.emender.org"}}}
             nil  {:configuration {:display {:emender-page nil}}}
@@ -256,8 +256,8 @@
             nil  nil)))
 
 (deftest test-get-url-prefix
-    "Check the function get-url-prefix."
-    (testing "the function get-url-prefix."
+    "Check the function zg.server/get-url-prefix."
+    (testing "the function zg.server/get-url-prefix."
         (are [x y] (= x (get-url-prefix y))
             "http://localhost" {:configuration {:server {:url-prefix "http://localhost"}}}
             nil  {:configuration {:server {:url-prefix nil}}}
