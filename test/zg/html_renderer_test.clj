@@ -196,3 +196,10 @@
             "url-prefix/users-whitelist" (users-href "url-prefix/" :whitelist)
             "url-prefix/users-blacklist" (users-href "url-prefix/" :blacklist))))
 
+(deftest test-remember-me-href
+    "Checking the function zg.html-renderer/remember-me-href."
+    (testing "the function zg.html-renderer/remember-me-href."
+        (are [x y] (= x y)
+            "url-prefix/whitelist" (remember-me-href "url-prefix/" :whitelist)
+            "url-prefix/blacklist" (remember-me-href "url-prefix/" :blacklist))))
+
