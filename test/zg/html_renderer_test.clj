@@ -189,3 +189,10 @@
             [:a {:href "user-whitelist?name=other-user"} "other-user"] (user-href "other-user" :whitelist)
             [:a {:href "user-blacklist?name=other-user"} "other-user"] (user-href "other-user" :blacklist))))
 
+(deftest test-users-href
+    "Checking the function zg.html-renderer/users-href."
+    (testing "the function zg.html-renderer/users-href."
+        (are [x y] (= x y)
+            "url-prefix/users-whitelist" (users-href "url-prefix/" :whitelist)
+            "url-prefix/users-blacklist" (users-href "url-prefix/" :blacklist))))
+
