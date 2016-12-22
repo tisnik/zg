@@ -134,8 +134,17 @@
 
 (deftest test-main-1
     "Check the function zg.core/main."
-    (testing "the function zg.core/main.")
+    (testing "the function zg.core/main."
         ; use mock instead of jetty/run-jetty
         (with-redefs [jetty/run-jetty (fn [app port] port)]
-            (is (= {:port 3000} (-main)))))
+            (is (= {:port 3000} (-main))))))
+
+(deftest test-main-2
+    "Check the function zg.core/main."
+    (testing "the function zg.core/main."
+        ; use mock instead of jetty/run-jetty
+        (with-redefs [jetty/run-jetty (fn [app port] port)]
+            (are [x y] (= x y)
+                {:port 2000} (-main "-p"     "2000")
+                {:port 2000} (-main "--port" "2000")))))
 
