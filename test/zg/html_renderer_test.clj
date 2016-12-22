@@ -180,5 +180,12 @@
             nil               (tab-class true false)
             nil               (tab-class "word" "world"))))
 
-
+(deftest test-user-href
+    "Checking the function zg.html-renderer/user-href."
+    (testing "the function zg.html-renderer/user-href."
+        (are [x y] (= x y)
+            [:a {:href "user-whitelist?name=username"} "username"] (user-href "username" :whitelist)
+            [:a {:href "user-blacklist?name=username"} "username"] (user-href "username" :blacklist)
+            [:a {:href "user-whitelist?name=other-user"} "other-user"] (user-href "other-user" :whitelist)
+            [:a {:href "user-blacklist?name=other-user"} "other-user"] (user-href "other-user" :blacklist))))
 
