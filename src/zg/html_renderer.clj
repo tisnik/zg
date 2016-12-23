@@ -273,6 +273,8 @@
                 (if search-results
                     [:table {:class "table table-stripped table-hover" :style "width:auto"}
                         [:tr [:th "Word"]
+                             (if (= mode :atomic-typos)
+                                 [:th "Correct form(s)"])
                              [:th "Added at"]
                              [:th "Added by"]
                              (if (= mode :blacklist)
@@ -283,6 +285,8 @@
                             (let [deleted (= (:deleted search-result) 1)
                                   word    (:word search-result)]
                                 [:tr [:td word]
+                                     (if (= mode :atomic-typos)
+                                         [:td (:correct search-result)])
                                      [:td (:datetime search-result)]
                                      [:td (user-href (:user search-result) mode)]
                                      (if (= mode :blacklist)
