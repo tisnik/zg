@@ -216,6 +216,43 @@
                 [:br])
         [:br]])
 
+(defn render-front-page-for-atomic-typos
+    [word url-prefix emender-page mode]
+    [:div {:class "container-fluid"}
+        [:div {:class "row"}
+            "The CCS Custom Dictionary Atomic Typos &ndash; allows you to add and remove words that are normally correct but should be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
+        ]
+        [:br]
+        [:div {:class "row"}
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "all-words-in-atomic-typos") :class "navbar-brand"} "All words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "active-words-in-atomic-typos") :class "navbar-brand"} "Active words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "deleted-words-in-atomic-typos") :class "navbar-brand"} "Deleted words"]
+            ] ; ./navbar-header
+            [:div {:style "width:80%"}
+                (render-search-field word url-prefix mode)
+            ]
+        ]
+        [:br]
+        [:br]
+        (form/form-to [:post (str url-prefix "add-word-to-atomic-typos")]
+                [:table {:style "border-collapse: separate; border-spacing: 10px;"}
+                    [:tr [:td [:div {:class "_label _label-primary"} "Word with typo(s):"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "30"} "wrong-word")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Correct form:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "30"} "correct-word")]]
+                    [:tr [:td "&nbsp;"]
+                         [:td "&nbsp;"]
+                         [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
+                [:br])
+        [:br]])
+
 (defn render-front-page
     "Render front page of this application."
     [word user-name search-results message url-prefix title emender-page mode]
@@ -227,6 +264,7 @@
             (case mode
                 :whitelist (render-front-page-for-whitelist word url-prefix emender-page mode)
                 :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode)
+                :atomic-typos (render-front-page-for-atomic-typos word url-prefix emender-page mode)
                 )
                 
                 (if message
