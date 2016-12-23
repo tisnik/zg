@@ -140,6 +140,16 @@
     (testing "the function zg.html-renderer/render-html-footer."
         (is (= (slurp "test/expected/html_footer1.html") (page/xhtml (render-html-footer))))))
 
+(deftest test-mode->str
+    "Checking the function zg.html-renderer/mode->str."
+    (testing "the function zg.html-renderer/mode->str."
+        (are [x y] (= x (mode->str y))
+            "whitelist"    :whitelist
+            "blacklist"    :blacklist
+            "atomic-typos" :atomic-typos
+            "whitelist"    :other
+            "whitelist"    nil)))
+
 (deftest test-render-search-href
     "Checking the function zg.html-renderer/render-search-href."
     (testing "the function zg.html-renderer/render-search-href."
