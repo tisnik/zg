@@ -30,9 +30,10 @@
     "Convert dictionary type (:whitelist, :blacklist) into a one character."
     [dictionary-type]
     (condp = dictionary-type
-        :whitelist "w"
-        :blacklist "b"
-                   "o"))
+        :whitelist    "w"
+        :blacklist    "b"
+        :atomic-typos "a"
+                      "o"))
 
 (defn insert-word-into-dictionary
     "Try to insert new word into the dictionary. If insert fails, exception
