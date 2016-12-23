@@ -41,6 +41,12 @@
         (is (callable? 'zg.html-renderer/render-html-footer))))
 
 
+(deftest test-mode->str-existence
+    "Check that the zg.html-renderer/mode->str definition exists."
+    (testing "if the zg.html-renderer/mode->str definition exists."
+        (is (callable? 'zg.html-renderer/mode->str))))
+
+
 (deftest test-search-href-existence
     "Check that the zg.html-renderer/search-href definition exists."
     (testing "if the zg.html-renderer/search-href definition exists."
@@ -138,14 +144,18 @@
     "Checking the function zg.html-renderer/render-search-href."
     (testing "the function zg.html-renderer/render-search-href."
         (are [x y] (= (slurp x) y)
-            "test/expected/search-href1.html" (search-href "" :whitelist)
-            "test/expected/search-href2.html" (search-href "" :blacklist)
-            "test/expected/search-href3.html" (search-href "/" :whitelist)
-            "test/expected/search-href4.html" (search-href "/" :blacklist)
-            "test/expected/search-href5.html" (search-href "http://10.20.30.40/" :whitelist)
-            "test/expected/search-href6.html" (search-href "http://10.20.30.40/" :blacklist)
-            "test/expected/search-href7.html" (search-href "http://10.20.30.40/zg/" :whitelist)
-            "test/expected/search-href8.html" (search-href "http://10.20.30.40/zg/" :blacklist))))
+            "test/expected/search-href1.html"  (search-href "" :whitelist)
+            "test/expected/search-href2.html"  (search-href "" :blacklist)
+            "test/expected/search-href3.html"  (search-href "/" :whitelist)
+            "test/expected/search-href4.html"  (search-href "/" :blacklist)
+            "test/expected/search-href5.html"  (search-href "http://10.20.30.40/" :whitelist)
+            "test/expected/search-href6.html"  (search-href "http://10.20.30.40/" :blacklist)
+            "test/expected/search-href7.html"  (search-href "http://10.20.30.40/zg/" :whitelist)
+            "test/expected/search-href8.html"  (search-href "http://10.20.30.40/zg/" :blacklist)
+            "test/expected/search-href9.html"  (search-href ""  :atomic-typos)
+            "test/expected/search-href10.html" (search-href "/" :atomic-typos)
+            "test/expected/search-href11.html" (search-href "http://10.20.30.40/" :atomic-typos)
+            "test/expected/search-href12.html" (search-href "http://10.20.30.40/zg/" :atomic-typos))))
 
 (deftest test-render-search-field
     "Checking the function zg.html-renderer/render-search-field."
