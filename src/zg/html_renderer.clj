@@ -40,7 +40,7 @@
 (defn mode->str
     "The actual zg mode (a keyword) is transformed into string that will be used in URL"
     [mode]
-    (condp = mode
+    (case mode
         :whitelist    "whitelist"
         :blacklist    "blacklist"
         :atomic-typos "atomic-typos"
@@ -148,6 +148,74 @@
         ] ; </body>
     ))
 
+(defn render-front-page-for-whitelist
+    [word url-prefix emender-page mode]
+    [:div {:class "container-fluid"}
+        [:div {:class "row"}
+            "The CCS Custom Dictionary Whitelist - allows you to add and remove words that should not be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
+        ]
+        [:br]
+        [:div {:class "row"}
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "all-words-in-whitelist") :class "navbar-brand"} "All words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "active-words-in-whitelist") :class "navbar-brand"} "Active words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "deleted-words-in-whitelist") :class "navbar-brand"} "Deleted words"]
+            ] ; ./navbar-header
+            [:div {:style "width:80%"}
+                (render-search-field word url-prefix mode)
+            ]
+        ]
+        [:br]
+        [:br]
+        (form/form-to [:post (str url-prefix "add-words-to-whitelist")]
+                [:div {:class "_label _label-primary"} "New words  (separate them with spaces, commas, or enter them on a new line)"]
+                (form/text-area {:cols "80" :rows "8"} "new-words")
+                [:br]
+                (form/submit-button {:class "btn btn-primary"} "Add new words")
+                [:br])
+        [:br]])
+
+(defn render-front-page-for-blacklist
+    [word url-prefix emender-page mode]
+    [:div {:class "container-fluid"}
+        [:div {:class "row"}
+            "The CCS Custom Dictionary Blacklist &ndash; allows you to add and remove words that are normally correct but should be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
+        ]
+        [:br]
+        [:div {:class "row"}
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "all-words-in-blacklist") :class "navbar-brand"} "All words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "active-words-in-blacklist") :class "navbar-brand"} "Active words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "deleted-words-in-blacklist") :class "navbar-brand"} "Deleted words"]
+            ] ; ./navbar-header
+            [:div {:style "width:80%"}
+                (render-search-field word url-prefix mode)
+            ]
+        ]
+        [:br]
+        [:br]
+        (form/form-to [:post (str url-prefix "add-word-to-blacklist")]
+                [:table {:style "border-collapse: separate; border-spacing: 10px;"}
+                    [:tr [:td [:div {:class "_label _label-primary"} "New word:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "30"} "new-word")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Description (optional):"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "50"} "description")]]
+                    [:tr [:td "&nbsp;"]
+                         [:td "&nbsp;"]
+                         [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
+                [:br])
+        [:br]])
+
 (defn render-front-page
     "Render front page of this application."
     [word user-name search-results message url-prefix title emender-page mode]
@@ -156,71 +224,10 @@
         [:body
             [:div {:class "container"}
                 (render-navigation-bar-section user-name url-prefix title mode)
-            (if (= mode :whitelist)
-                [:div {:class "container-fluid"}
-                        [:div {:class "row"}
-                            "The CCS Custom Dictionary Whitelist - allows you to add and remove words that should not be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
-                        ]
-                        [:br]
-                        [:div {:class "row"}
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "all-words-in-whitelist") :class "navbar-brand"} "All words"]
-                            ] ; ./navbar-header
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "active-words-in-whitelist") :class "navbar-brand"} "Active words"]
-                            ] ; ./navbar-header
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "deleted-words-in-whitelist") :class "navbar-brand"} "Deleted words"]
-                            ] ; ./navbar-header
-                            [:div {:style "width:80%"}
-                                (render-search-field word url-prefix mode)
-                            ]
-                        ]
-                        [:br]
-                        [:br]
-                        (form/form-to [:post (str url-prefix "add-words-to-whitelist")]
-                                [:div {:class "_label _label-primary"} "New words  (separate them with spaces, commas, or enter them on a new line)"]
-                                (form/text-area {:cols "80" :rows "8"} "new-words")
-                                [:br]
-                                (form/submit-button {:class "btn btn-primary"} "Add new words")
-                                [:br]
-                            )
-                                [:br]
-                    ]
-                [:div {:class "container-fluid"}
-                        [:div {:class "row"}
-                            "The CCS Custom Dictionary Blacklist &ndash; allows you to add and remove words that are normally correct but should be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
-                        ]
-                        [:br]
-                        [:div {:class "row"}
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "all-words-in-blacklist") :class "navbar-brand"} "All words"]
-                            ] ; ./navbar-header
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "active-words-in-blacklist") :class "navbar-brand"} "Active words"]
-                            ] ; ./navbar-header
-                            [:div {:class "navbar-header"}
-                                [:a {:href (str url-prefix "deleted-words-in-blacklist") :class "navbar-brand"} "Deleted words"]
-                            ] ; ./navbar-header
-                            [:div {:style "width:80%"}
-                                (render-search-field word url-prefix mode)
-                            ]
-                        ]
-                        [:br]
-                        [:br]
-                        (form/form-to [:post (str url-prefix "add-word-to-blacklist")]
-                                [:table {:style "border-collapse: separate; border-spacing: 10px;"}
-                                    [:tr [:td [:div {:class "_label _label-primary"} "New word:"]]
-                                         [:td "&nbsp;"]
-                                         [:td (form/text-field {:size "30"} "new-word")]]
-                                    [:tr [:td [:div {:class "_label _label-default"} "Description (optional):"]]
-                                         [:td "&nbsp;"]
-                                         [:td (form/text-field {:size "50"} "description")]]
-                                    [:tr [:td "&nbsp;"]
-                                         [:td "&nbsp;"]
-                                         [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
-                                [:br]
-                    )])
+            (case mode
+                :whitelist (render-front-page-for-whitelist word url-prefix emender-page mode)
+                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode)
+                )
                 
                 (if message
                     [:div {:class "label label-warning"} message ]
