@@ -14,7 +14,5 @@
 
 DATABASE=zg.db
 
-cat database_dump_1.sql | sqlite3 ../${DATABASE}
-cat database_dump_2.sql | sqlite3 ../${DATABASE}
-cat atomic_typos.sql    | sqlite3 ../${DATABASE}
+sqlite3 ../${DATABASE} "select * from dictionary where deleted=1 and dictionary='a' order by word"
 
