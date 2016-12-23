@@ -37,12 +37,19 @@
     []
     [:div "<br /><br /><br /><br />Author: Pavel Tisnovsky &lt;<a href='mailto:ptisnovs@redhat.com'>ptisnovs@redhat.com</a>&gt"])
 
+(defn mode->str
+    "The actual zg mode (a keyword) is transformed into string that will be used in URL"
+    [mode]
+    (condp = mode
+        :whitelist    "whitelist"
+        :blacklist    "blacklist"
+        :atomic-typos "atomic-typos"
+                      "whitelist")) ; default
+
 (defn search-href
     "Generator of href destination for the 'search' input field."
     [url-prefix mode]
-    (if (= mode :whitelist)
-        (str url-prefix "whitelist")
-        (str url-prefix "blacklist")))
+    (str url-prefix (mode->str mode)))
 
 (defn render-search-field
     "Renders search box on the top side of HTML page."
@@ -106,6 +113,7 @@
                         [:ul {:class "nav navbar-nav"}
                             [:li (tab-class :whitelist mode) [:a {:href (str url-prefix "whitelist")} "Whitelist"]]
                             [:li (tab-class :blacklist mode) [:a {:href (str url-prefix "blacklist")} "Blacklist"]]
+                            [:li (tab-class :atomic-typos mode) [:a {:href (str url-prefix "atomic-typos")} "Atomic typos"]]
                         ]
                     ]
                 ] ; col-md-7 ends
