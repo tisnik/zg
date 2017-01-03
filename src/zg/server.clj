@@ -125,11 +125,16 @@
         (->> (clojure.string/split input #"[\s,\n]")
              (filter seq))))
 
+(defn read-string-parameter
+    [request parameter-name]
+    (if-let [parameter-value (-> (:params request) (get parameter-name))]
+            (clojure.string/trim parameter-value)))
+
 (defn process-add-word
-    "Add word provided by user (together with its description) to the blacklist."
+    "Add word provided by user (together with its description) to the blacklist or into atomic typos."
     [request title emender-page mode]
-    (let [word        (-> (:params request) (get "new-word") clojure.string/trim)
-          description (-> (:params request) (get "description") clojure.string/trim)
+    (let [word        (read-string-parameter request "new-word")
+          description (read-string-parameter request "description")
           proper-word (dictionary-interface/proper-word-for-blacklist? word)
           user-name (get-user-name request)
           message   (add-word-message word proper-word)]
@@ -342,9 +347,10 @@
             "/deleted-words-in-whitelist"    (process-deleted-words request title emender-page :whitelist)
             "/deleted-words-in-blacklist"    (process-deleted-words request title emender-page :blacklist)
             "/deleted-words-in-atomic-typos" (process-deleted-words     request title emender-page :atomic-typos)
-            "/add-word-to-blacklist"  (process-add-word      request title emender-page :blacklist)
+            "/add-word-to-blacklist"    (process-add-word      request title emender-page :blacklist)
             ;"/find-words"       (process-find-words    request)
-            "/add-words-to-whitelist" (process-add-words     request title emender-page :whitelist)
+            "/add-words-to-whitelist"   (process-add-words     request title emender-page :whitelist)
+            "/add-word-to-atomic-typos" (process-add-word     request title emender-page :atomic-typos)
             "/users-whitelist"        (process-user-list     request title :whitelist)
             "/users-blacklist"        (process-user-list     request title :blacklist)
             "/user-whitelist"         (process-user-info     request title :whitelist)
