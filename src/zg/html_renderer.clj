@@ -243,7 +243,7 @@
                 [:table {:style "border-collapse: separate; border-spacing: 10px;"}
                     [:tr [:td [:div {:class "_label _label-primary"} "Word with typo(s):"]]
                          [:td "&nbsp;"]
-                         [:td (form/text-field {:size "30"} "wrong-word")]]
+                         [:td (form/text-field {:size "30"} "new-word")]]
                     [:tr [:td [:div {:class "_label _label-default"} "Correct form:"]]
                          [:td "&nbsp;"]
                          [:td (form/text-field {:size "30"} "correct-word")]]
