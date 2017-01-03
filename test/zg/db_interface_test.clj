@@ -135,6 +135,7 @@
         (are [x y] (= x (dictionary-type->char y))
             "w" :whitelist
             "b" :blacklist
+            "a" :atomic-typos
             "o" :other)))
 
 (deftest test-insert-word-into-dictionary
