@@ -38,9 +38,10 @@
 (defn insert-word-into-dictionary
     "Try to insert new word into the dictionary. If insert fails, exception
      is thrown and it needs to be caught outside this function."
-    [word description user-name dictionary-type datetime]
+    [word correct-form description user-name dictionary-type datetime]
     (jdbc/insert! db-spec/zg-db
         :dictionary {:word       word
+                     :correct    correct-form
                      :dictionary (dictionary-type->char dictionary-type)
                      :user       user-name
                      :datetime   datetime
@@ -54,14 +55,25 @@
     (let [datetime (format-date/format-current-date)]
         (log/info "storing" datetime word)
         (try
-            (insert-word-into-dictionary word nil user-name dictionary-type datetime)
+            (insert-word-into-dictionary word nil nil user-name dictionary-type datetime)
             (catch Exception e
                 (log/error e "insert word into dictionary")))))
     ([word description user-name dictionary-type]
     (let [datetime (format-date/format-current-date)]
         (log/info "storing" datetime word)
         (try
-            (insert-word-into-dictionary word description user-name dictionary-type datetime)
+            (insert-word-into-dictionary word nil description user-name dictionary-type datetime)
+            (catch Exception e
+                (try
+                    (jdbc/update! db-spec/zg-db
+                          :dictionary {:description description} ["word=?" word])
+                    (catch Exception e
+                        (log/error e "insert word into dictionary")))))))
+    ([word correct-form description user-name dictionary-type]
+    (let [datetime (format-date/format-current-date)]
+        (log/info "storing" datetime word)
+        (try
+            (insert-word-into-dictionary word correct-form description user-name dictionary-type datetime)
             (catch Exception e
                 (try
                     (jdbc/update! db-spec/zg-db
