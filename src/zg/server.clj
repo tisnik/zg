@@ -94,6 +94,15 @@
                              (db-interface/read-words-for-pattern word :blacklist))]
         (finish-processing request search-results nil title emender-page :blacklist)))
 
+(defn process-atomic-typos
+    "Function that prepares data for the Atomic typos front page."
+    [request title emender-page]
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :atomic-typos))]
+        (finish-processing request search-results nil title emender-page :atomic-typos)))
+
 (defn add-word-message
     [word proper-word]
     (if (seq word)
@@ -323,12 +332,16 @@
             "/"                           (process-front-page    request title emender-page)
             "/whitelist"                  (process-whitelist     request title emender-page)
             "/blacklist"                  (process-blacklist     request title emender-page)
+            "/atomic-typos"               (process-atomic-typos  request title emender-page)
             "/all-words-in-whitelist"     (process-all-words     request title emender-page :whitelist)
             "/all-words-in-blacklist"     (process-all-words     request title emender-page :blacklist)
+            "/all-words-in-atomic-typos"  (process-all-words     request title emender-page :atomic-typos)
             "/active-words-in-whitelist"  (process-active-words  request title emender-page :whitelist)
             "/active-words-in-blacklist"  (process-active-words  request title emender-page :blacklist)
-            "/deleted-words-in-whitelist" (process-deleted-words request title emender-page :whitelist)
-            "/deleted-words-in-blacklist" (process-deleted-words request title emender-page :blacklist)
+            "/active-words-in-atomic-typos"  (process-active-words     request title emender-page :atomic-typos)
+            "/deleted-words-in-whitelist"    (process-deleted-words request title emender-page :whitelist)
+            "/deleted-words-in-blacklist"    (process-deleted-words request title emender-page :blacklist)
+            "/deleted-words-in-atomic-typos" (process-deleted-words     request title emender-page :atomic-typos)
             "/add-word-to-blacklist"  (process-add-word      request title emender-page :blacklist)
             ;"/find-words"       (process-find-words    request)
             "/add-words-to-whitelist" (process-add-words     request title emender-page :whitelist)
