@@ -215,7 +215,8 @@
         (are [x y] (= x y)
             "url-prefix/users-whitelist"    (users-href "url-prefix/" :whitelist)
             "url-prefix/users-blacklist"    (users-href "url-prefix/" :blacklist)
-            "url-prefix/users-atomic-typos" (users-href "url-prefix/" :atomic-typos))))
+            "url-prefix/users-atomic-typos" (users-href "url-prefix/" :atomic-typos)
+            nil                             (users-href "url-prefix/" :something-else))))
 
 (deftest test-remember-me-href
     "Checking the function zg.html-renderer/remember-me-href."
@@ -223,5 +224,6 @@
         (are [x y] (= x y)
             "url-prefix/whitelist"    (remember-me-href "url-prefix/" :whitelist)
             "url-prefix/blacklist"    (remember-me-href "url-prefix/" :blacklist)
-            "url-prefix/atomic-typos" (remember-me-href "url-prefix/" :atomic-typos))))
+            "url-prefix/atomic-typos" (remember-me-href "url-prefix/" :atomic-typos)
+            nil                       (remember-me-href "url-prefix/" :something-else))))
 
