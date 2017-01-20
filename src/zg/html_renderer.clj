@@ -303,6 +303,14 @@
         ] ; </body>
     ))
 
+(defn dictionary-name
+    [dictionary-type]
+    (condp = dictionary-type
+        "w" "whitelist"
+        "b" "blacklist"
+        "a" "atomic typos"
+            "unknown"))
+
 (defn render-users
     "Render page containing list of all users."
     [user-name statistic changes url-prefix title mode]
@@ -328,7 +336,7 @@
                          [:th "Added by"]]
                     (for [change changes]
                         [:tr [:td (:word change)]
-                             [:td (if (= (:dictionary change) "w") "whitelist" "blacklist")]
+                             [:td (dictionary-name (:dictionary change))]
                              [:td (:datetime change)]
                              [:td (user-href (:user change) mode)]])
                 ] ; </table>
@@ -354,7 +362,7 @@
                          [:th "Added at"]]
                     (for [change changes]
                         [:tr [:td (:word change)]
-                             [:td (if (= (:dictionary change) "w") "whitelist" "blacklist")]
+                             [:td (dictionary-name (:dictionary change))]
                              [:td (:datetime change)]])
                 ] ; </table>
                 (render-html-footer)
