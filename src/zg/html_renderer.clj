@@ -89,16 +89,17 @@
     "Generator for URL used by 'Users' menu item."
     [url-prefix mode]
     (condp = mode
-        :whitelist (str url-prefix "users-whitelist")
-        :blacklist (str url-prefix "users-blacklist")
+        :whitelist    (str url-prefix "users-whitelist")
+        :blacklist    (str url-prefix "users-blacklist")
         :atomic-typos (str url-prefix "users-atomic-typos")))
 
 (defn remember-me-href
     "Generator for URL used by 'remember me' button."
     [url-prefix mode]
-    (if (= mode :whitelist)
-        (str url-prefix "whitelist")
-        (str url-prefix "blacklist")))
+    (condp = mode
+        :whitelist    (str url-prefix "whitelist")
+        :blacklist    (str url-prefix "blacklist")
+        :atomic-typos (str url-prefix "atomic-typos")))
 
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
