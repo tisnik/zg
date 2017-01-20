@@ -64,3 +64,14 @@
             "This is test"
             "This is test.")))
 
+(deftest test-proper-word-for-blacklist?-negative
+    "Check the function zg.dictionary-interface/proper-word-for-blacklist?"
+    (testing "the function zg.dictionary-interface/proper-word-for-blacklist?"
+        (are [x] (not (seq (proper-word-for-blacklist? x)))
+            ""
+            "!"
+            "!!"
+            "! !"
+            "Test!"
+            "This is test!")))
+
