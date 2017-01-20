@@ -62,7 +62,10 @@
             "0"
             "I'm"
             "This is test"
-            "This is test.")))
+            "This is test."
+            "/"
+            "a/b"
+            "foo/bar")))
 
 (deftest test-proper-word-for-blacklist?-negative
     "Check the function zg.dictionary-interface/proper-word-for-blacklist?"
@@ -87,4 +90,18 @@
             "I'm"
             "This is test"
             "This is test.")))
+
+(deftest test-proper-word-for-whitelist?-negative
+    "Check the function zg.dictionary-interface/proper-word-for-whitelist?"
+    (testing "the function zg.dictionary-interface/proper-word-for-whitelist?"
+        (are [x] (not (seq (proper-word-for-whitelist? x)))
+            ""
+            "!"
+            "!!"
+            "! !"
+            "Test!"
+            "This is test!"
+            "/"
+            "a/b"
+            "foo/bar")))
 
