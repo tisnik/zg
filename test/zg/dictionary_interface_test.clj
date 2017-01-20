@@ -51,3 +51,16 @@
         (is (callable? 'zg.dictionary-interface/store-words))))
 
 
+(deftest test-proper-word-for-blacklist?
+    "Check the function zg.dictionary-interface/proper-word-for-blacklist?"
+    (testing "the function zg.dictionary-interface/proper-word-for-blacklist?"
+        (are [x] (seq (proper-word-for-blacklist? x))
+            "test"
+            "Test"
+            "TEST"
+            "Test0"
+            "0"
+            "I'm"
+            "This is test"
+            "This is test.")))
+
