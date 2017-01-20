@@ -354,6 +354,7 @@
             "/add-word-to-atomic-typos" (process-add-word     request title emender-page :atomic-typos)
             "/users-whitelist"        (process-user-list     request title :whitelist)
             "/users-blacklist"        (process-user-list     request title :blacklist)
+            "/users-atomic-typos"     (process-user-list     request title :atomic-typos)
             "/user-whitelist"         (process-user-info     request title :whitelist)
             "/user-blacklist"         (process-user-info     request title :blacklist)
             "/all-words/json"         (process-wordlist-json request nil)
