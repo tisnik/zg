@@ -91,7 +91,8 @@
     (condp = mode
         :whitelist    (str url-prefix "users-whitelist")
         :blacklist    (str url-prefix "users-blacklist")
-        :atomic-typos (str url-prefix "users-atomic-typos")))
+        :atomic-typos (str url-prefix "users-atomic-typos")
+                      nil))
 
 (defn remember-me-href
     "Generator for URL used by 'remember me' button."
@@ -99,7 +100,8 @@
     (condp = mode
         :whitelist    (str url-prefix "whitelist")
         :blacklist    (str url-prefix "blacklist")
-        :atomic-typos (str url-prefix "atomic-typos")))
+        :atomic-typos (str url-prefix "atomic-typos")
+                      nil))
 
 (defn render-navigation-bar-section
     "Renders whole navigation bar."
