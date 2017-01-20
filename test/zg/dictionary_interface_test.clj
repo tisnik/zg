@@ -75,3 +75,16 @@
             "Test!"
             "This is test!")))
 
+(deftest test-proper-word-for-whitelist?
+    "Check the function zg.dictionary-interface/proper-word-for-whitelist?"
+    (testing "the function zg.dictionary-interface/proper-word-for-whitelist?"
+        (are [x] (seq (proper-word-for-whitelist? x))
+            "test"
+            "Test"
+            "TEST"
+            "Test0"
+            "0"
+            "I'm"
+            "This is test"
+            "This is test.")))
+
