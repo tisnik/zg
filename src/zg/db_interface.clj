@@ -184,3 +184,12 @@
             (log/error e "read changes for user" user-name)
             [])))
 
+(defn read-sources
+    []
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select id, source from dictionary order by source"])
+        (catch Exception e
+            (log/error e "read sources")
+            [])))
+
