@@ -184,7 +184,7 @@
         [:br]])
 
 (defn render-front-page-for-blacklist
-    [word url-prefix emender-page mode]
+    [word url-prefix emender-page mode sources]
     [:div {:class "container-fluid"}
         [:div {:class "row"}
             "The CCS Custom Dictionary Blacklist &ndash; allows you to add and remove words that are normally correct but should be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
@@ -214,6 +214,18 @@
                     [:tr [:td [:div {:class "_label _label-default"} "Description (optional):"]]
                          [:td "&nbsp;"]
                          [:td (form/text-field {:size "50"} "description")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Class:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/drop-down "class" ["N/A" "Noun" "Verb" "Adjective" "Adverb" "Pronoun" "Preposition" "Conjunction" "Determiner" "Exclamation"])]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Internal:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/check-box "internal")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Copyright:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/check-box "copyright")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Source:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/drop-down "source" (map (fn [i] [(:source i)(:id i)]) sources) )]]
                     [:tr [:td "&nbsp;"]
                          [:td "&nbsp;"]
                          [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
@@ -263,7 +275,7 @@
 
 (defn render-front-page
     "Render front page of this application."
-    [word user-name search-results message url-prefix title emender-page mode]
+    [word user-name search-results sources message url-prefix title emender-page mode]
     (page/xhtml
         (render-html-header word url-prefix title)
         [:body
@@ -271,7 +283,7 @@
                 (render-navigation-bar-section user-name url-prefix title mode)
             (case mode
                 :whitelist (render-front-page-for-whitelist word url-prefix emender-page mode)
-                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode)
+                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode sources)
                 :atomic-typos (render-front-page-for-atomic-typos word url-prefix emender-page mode)
                 )
                 

@@ -64,10 +64,10 @@
         (log/info "Word to search: " word)
         (log/trace "Search results: " search-results)
         (if user-name
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results sources message url-prefix title emender-page mode))
                 (http-response/set-cookie :user-name user-name {:max-age 36000000})
                 (http-response/content-type "text/html"))
-            (-> (http-response/response (html-renderer/render-front-page word user-name search-results message url-prefix title emender-page mode))
+            (-> (http-response/response (html-renderer/render-front-page word user-name search-results sources message url-prefix title emender-page mode))
                 (http-response/content-type "text/html")))))
 
 (defn process-front-page
