@@ -302,13 +302,13 @@
                                          [:td (:correct search-result)])
                                      [:td (:datetime search-result)]
                                      [:td (user-href (:user search-result) mode)]
+                                     (if (= mode :blacklist)
+                                         [:td (:description search-result)])
                                      [:td (handle-null :class search-result)]
                                      [:td (handle-null :use search-result)]
                                      [:td (handle-null :internal search-result)]
                                      [:td (handle-null :copyright search-result)]
                                      [:td (handle-null :source search-result)]
-                                     (if (= mode :blacklist)
-                                         [:td (:description search-result)])
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-default"} "undelete"]
                                                       [:a {:href (str "?delete="   word) :class "btn btn-default"}  "delete"])]
