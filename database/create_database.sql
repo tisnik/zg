@@ -15,6 +15,8 @@ create table dictionary (
     use         integer,
     internal    integer,
     copyright   integer,
+    source      integer,
     primary key (word, dictionary)
+    foreign key (source) references sources(id)
 );
 
