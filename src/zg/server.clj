@@ -135,15 +135,21 @@
 (defn process-add-word
     "Add word provided by user (together with its description) to the blacklist or into atomic typos."
     [request title emender-page mode]
+    (println request)
     (let [word         (read-string-parameter request "new-word")
           description  (read-string-parameter request "description")
           correct-form (read-string-parameter request "correct-word")
+          word-class   (read-string-parameter request "class")
+          internal     (read-string-parameter request "internal")
+          copyright    (read-string-parameter request "copyright")
+          source       (read-string-parameter request "source")
           proper-word  (dictionary-interface/proper-word-for-blacklist? word)
           user-name    (get-user-name request)
-          message      (add-word-message word proper-word)]
+          message      (add-word-message word proper-word)
+          sources      (db-interface/read-sources)]
           (if (and proper-word (seq word))
               (dictionary-interface/store-word word correct-form description user-name mode))
-        (finish-processing request nil nil message title emender-page mode)))
+        (finish-processing request nil sources message title emender-page mode)))
 
 (defn process-add-words
     [request title emender-page mode]
