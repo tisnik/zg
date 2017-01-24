@@ -257,6 +257,10 @@
                 [:br])
         [:br]])
 
+(defn handle-null
+    [key search-results]
+    (or (get key search-results) "N/A"))
+
 (defn render-front-page
     "Render front page of this application."
     [word user-name search-results message url-prefix title emender-page mode]
@@ -283,6 +287,11 @@
                              [:th "Added by"]
                              (if (= mode :blacklist)
                                  [:th "Description"])
+                             [:th "Class"]
+                             [:th "Use it"]
+                             [:th "Internal"]
+                             [:th "Copyright"]
+                             [:th "Source"]
                              [:th "Status"]
                              [:th "Operation"]]
                         (for [search-result search-results]
@@ -293,6 +302,11 @@
                                          [:td (:correct search-result)])
                                      [:td (:datetime search-result)]
                                      [:td (user-href (:user search-result) mode)]
+                                     [:td (handle-null :class search-result)]
+                                     [:td (handle-null :use search-result)]
+                                     [:td (handle-null :internal search-result)]
+                                     [:td (handle-null :copyright search-result)]
+                                     [:td (handle-null :source search-result)]
                                      (if (= mode :blacklist)
                                          [:td (:description search-result)])
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
