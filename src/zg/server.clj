@@ -54,7 +54,7 @@
         :url-prefix))
 
 (defn finish-processing
-    [request search-results message title emender-page mode]
+    [request search-results sources message title emender-page mode]
     (let [params        (:params request)
           cookies       (:cookies request)
           word          (get params "word")
@@ -74,7 +74,7 @@
     "Function that prepares data for the front page."
     [request title emender-page]
     (let [params         (:params request)]
-        (finish-processing request nil nil title emender-page :whitelist)))
+        (finish-processing request nil nil nil title emender-page :whitelist)))
 
 (defn process-whitelist
     "Function that prepares data for the whitelist front page."
@@ -83,7 +83,7 @@
           word           (get params "word")
           search-results (if (not (empty? word))
                              (db-interface/read-words-for-pattern word :whitelist))]
-        (finish-processing request search-results nil title emender-page :whitelist)))
+        (finish-processing request search-results nil nil title emender-page :whitelist)))
 
 (defn process-blacklist
     "Function that prepares data for the blacklist front page."
@@ -91,8 +91,9 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :blacklist))]
-        (finish-processing request search-results nil title emender-page :blacklist)))
+                             (db-interface/read-words-for-pattern word :blacklist))
+          sources        (db-interface/read-sources)]
+        (finish-processing request search-results sources nil title emender-page :blacklist)))
 
 (defn process-atomic-typos
     "Function that prepares data for the Atomic typos front page."
@@ -100,8 +101,9 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :atomic-typos))]
-        (finish-processing request search-results nil title emender-page :atomic-typos)))
+                             (db-interface/read-words-for-pattern word :atomic-typos))
+          sources        (db-interface/read-sources)]
+        (finish-processing request search-results sources nil title emender-page :atomic-typos)))
 
 (defn add-word-message
     [word proper-word]
@@ -141,7 +143,7 @@
           message      (add-word-message word proper-word)]
           (if (and proper-word (seq word))
               (dictionary-interface/store-word word correct-form description user-name mode))
-        (finish-processing request nil message title emender-page mode)))
+        (finish-processing request nil nil message title emender-page mode)))
 
 (defn process-add-words
     [request title emender-page mode]
@@ -152,7 +154,7 @@
           message      (add-words-message proper-words)]
           (if (seq proper-words)
               (dictionary-interface/store-words proper-words user-name mode))
-        (finish-processing request nil message title emender-page mode)))
+        (finish-processing request nil nil message title emender-page mode)))
 
 (defn perform-operation
     [request mode]
@@ -169,22 +171,25 @@
     "Read all words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
-    (let [search-results (db-interface/read-all-words mode)]
-        (finish-processing request search-results nil title emender-page mode)))
+    (let [search-results (db-interface/read-all-words mode)
+          sources        (db-interface/read-sources)]
+        (finish-processing request search-results sources nil title emender-page mode)))
 
 (defn process-deleted-words
     "Read all deleted words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
-    (let [search-results (db-interface/read-deleted-words mode)]
-        (finish-processing request search-results nil title emender-page mode)))
+    (let [search-results (db-interface/read-deleted-words mode)
+          sources        (db-interface/read-sources)]
+        (finish-processing request search-results sources nil title emender-page mode)))
 
 (defn process-active-words
     "Read all nondeleted words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
-    (let [search-results (db-interface/read-active-words mode)]
-        (finish-processing request search-results nil title emender-page mode)))
+    (let [search-results (db-interface/read-active-words mode)
+          sources        (db-interface/read-sources)]
+        (finish-processing request search-results sources nil title emender-page mode)))
 
 (defn read-changes-statistic
     []

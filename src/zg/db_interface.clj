@@ -188,7 +188,7 @@
     []
     (try
         (jdbc/query db-spec/zg-db
-                        ["select id, source from dictionary order by source"])
+                        ["select id, source from sources order by source"])
         (catch Exception e
             (log/error e "read sources")
             [])))
