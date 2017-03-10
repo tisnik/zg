@@ -109,9 +109,9 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :universal))
+                             (db-interface/read-words-for-pattern word :glossary))
           sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page :universal)))
+        (finish-processing request search-results sources nil title emender-page :glossary)))
 
 (defn add-word-message
     [word proper-word]

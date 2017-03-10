@@ -44,7 +44,7 @@
         :whitelist    "whitelist"
         :blacklist    "blacklist"
         :atomic-typos "atomic-typos"
-        :universal    "universal"
+        :glossary     "glossary"
                       "whitelist")) ; default
 
 (defn search-href
@@ -93,6 +93,7 @@
         :whitelist    (str url-prefix "users-whitelist")
         :blacklist    (str url-prefix "users-blacklist")
         :atomic-typos (str url-prefix "users-atomic-typos")
+        :glossary     (str url-prefix "users-glossary")
                       nil))
 
 (defn remember-me-href
@@ -102,6 +103,7 @@
         :whitelist    (str url-prefix "whitelist")
         :blacklist    (str url-prefix "blacklist")
         :atomic-typos (str url-prefix "atomic-typos")
+        :glossary     (str url-prefix "glossary")
                       nil))
 
 (defn render-navigation-bar-section
@@ -271,6 +273,55 @@
                 [:br])
         [:br]])
 
+(defn render-front-page-for-glossary
+    [word url-prefix emender-page mode sources]
+    [:div {:class "container-fluid"}
+        [:div {:class "row"}
+            "Glossary"
+        ]
+        [:br]
+        [:div {:class "row"}
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "all-words-in-glossary") :class "navbar-brand"} "All words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "active-words-in-glossary") :class "navbar-brand"} "Active words"]
+            ] ; ./navbar-header
+            [:div {:class "navbar-header"}
+                [:a {:href (str url-prefix "deleted-words-in-glossary") :class "navbar-brand"} "Deleted words"]
+            ] ; ./navbar-header
+            [:div {:style "width:80%"}
+                (render-search-field word url-prefix mode)
+            ]
+        ]
+        [:br]
+        [:br]
+        (form/form-to [:post (str url-prefix "add-word-to-glossary")]
+                [:table {:style "border-collapse: separate; border-spacing: 10px;"}
+                    [:tr [:td [:div {:class "_label _label-primary"} "New word:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "30"} "new-word")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Description (optional):"]]
+                         [:td "&nbsp;"]
+                         [:td (form/text-field {:size "50"} "description")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Class:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/drop-down "class" ["N/A" "Noun" "Verb" "Adjective" "Adverb" "Pronoun" "Preposition" "Conjunction" "Determiner" "Exclamation"])]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Internal:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/check-box "internal")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Copyright:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/check-box "copyright")]]
+                    [:tr [:td [:div {:class "_label _label-default"} "Source:"]]
+                         [:td "&nbsp;"]
+                         [:td (form/drop-down "source" (map (fn [i] [(:source i)(:id i)]) sources) )]]
+                    [:tr [:td "&nbsp;"]
+                         [:td "&nbsp;"]
+                         [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
+                [:br])
+        [:br]])
+
 (defn handle-null
     [key search-results]
     (or (get key search-results) "N/A"))
@@ -278,15 +329,20 @@
 (defn render-front-page
     "Render front page of this application."
     [word user-name search-results sources message url-prefix title emender-page mode]
+    (println user-name)
+    (println url-prefix)
+    (println title)
+    (println mode)
     (page/xhtml
         (render-html-header word url-prefix title)
         [:body
             [:div {:class "container"}
                 (render-navigation-bar-section user-name url-prefix title mode)
             (case mode
-                :whitelist (render-front-page-for-whitelist word url-prefix emender-page mode)
-                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode)
+                :whitelist    (render-front-page-for-whitelist word url-prefix emender-page mode)
+                :blacklist    (render-front-page-for-blacklist word url-prefix emender-page mode)
                 :atomic-typos (render-front-page-for-atomic-typos word url-prefix emender-page mode)
+                :glossary     (render-front-page-for-glossary word url-prefix emender-page mode sources)
                 )
                 
                 (if message
@@ -339,6 +395,7 @@
         "w" "whitelist"
         "b" "blacklist"
         "a" "atomic typos"
+        "g" "glossary"
             "unknown"))
 
 (defn render-users
