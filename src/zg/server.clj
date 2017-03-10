@@ -91,9 +91,8 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :blacklist))
-          sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page :blacklist)))
+                             (db-interface/read-words-for-pattern word :blacklist))]
+        (finish-processing request search-results nil nil title emender-page :blacklist)))
 
 (defn process-atomic-typos
     "Function that prepares data for the Atomic typos front page."
@@ -101,9 +100,18 @@
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :atomic-typos))
+                             (db-interface/read-words-for-pattern word :atomic-typos))]
+        (finish-processing request search-results nil nil title emender-page :atomic-typos)))
+
+(defn process-glossary
+    "Function that prepares data for the Glossary front page."
+    [request title emender-page]
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :universal))
           sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page :atomic-typos)))
+        (finish-processing request search-results sources nil title emender-page :universal)))
 
 (defn add-word-message
     [word proper-word]
@@ -350,6 +358,7 @@
             "/whitelist"                  (process-whitelist     request title emender-page)
             "/blacklist"                  (process-blacklist     request title emender-page)
             "/atomic-typos"               (process-atomic-typos  request title emender-page)
+            "/glossary"                   (process-glossary      request title emender-page)
             "/all-words-in-whitelist"     (process-all-words     request title emender-page :whitelist)
             "/all-words-in-blacklist"     (process-all-words     request title emender-page :blacklist)
             "/all-words-in-atomic-typos"  (process-all-words     request title emender-page :atomic-typos)
