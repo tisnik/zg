@@ -44,6 +44,7 @@
         :whitelist    "whitelist"
         :blacklist    "blacklist"
         :atomic-typos "atomic-typos"
+        :universal    "universal"
                       "whitelist")) ; default
 
 (defn search-href
@@ -184,7 +185,7 @@
         [:br]])
 
 (defn render-front-page-for-blacklist
-    [word url-prefix emender-page mode sources]
+    [word url-prefix emender-page mode]
     [:div {:class "container-fluid"}
         [:div {:class "row"}
             "The CCS Custom Dictionary Blacklist &ndash; allows you to add and remove words that are normally correct but should be reported as errors in Red Hat documentation by Emender (" [:a {:href emender-page} "see Emender page" ] ")"
@@ -223,9 +224,9 @@
                     [:tr [:td [:div {:class "_label _label-default"} "Copyright:"]]
                          [:td "&nbsp;"]
                          [:td (form/check-box "copyright")]]
-                    [:tr [:td [:div {:class "_label _label-default"} "Source:"]]
-                         [:td "&nbsp;"]
-                         [:td (form/drop-down "source" (map (fn [i] [(:source i)(:id i)]) sources) )]]
+                   ;[:tr [:td [:div {:class "_label _label-default"} "Source:"]]
+                   ;     [:td "&nbsp;"]
+                   ;     [:td (form/drop-down "source" (map (fn [i] [(:source i)(:id i)]) sources) )]]
                     [:tr [:td "&nbsp;"]
                          [:td "&nbsp;"]
                          [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
@@ -283,7 +284,7 @@
                 (render-navigation-bar-section user-name url-prefix title mode)
             (case mode
                 :whitelist (render-front-page-for-whitelist word url-prefix emender-page mode)
-                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode sources)
+                :blacklist (render-front-page-for-blacklist word url-prefix emender-page mode)
                 :atomic-typos (render-front-page-for-atomic-typos word url-prefix emender-page mode)
                 )
                 
