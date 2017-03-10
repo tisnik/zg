@@ -1,6 +1,11 @@
 create table sources (
-    id          integer primary key asc,
-    source      text not null
+    id              integer primary key asc,
+    source          text not null
+);
+
+create table classes (
+    id              integer primary key asc,
+    class           text not null
 );
 
 create table dictionary (
