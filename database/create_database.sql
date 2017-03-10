@@ -9,20 +9,25 @@ create table classes (
 );
 
 create table dictionary (
-    word        text,
-    dictionary  char, -- 'w':whitelist  'b': blacklist   'a':atomic typos
-    user        text,
-    datetime    text,
-    deleted     integer,
-    description text,
-    correct     text, -- used by atomic typos only
-    class       text,
-    use         integer,
-    internal    integer,
-    copyright   integer,
-    source      integer,
-    primary key (word, dictionary)
+    id              integer primary key asc,
+    word            text not null,
+    dictionary      char, -- 'w':whitelist  'b': blacklist   'a':atomic typos   'u':universal
+    user            text,
+    datetime        text,
+    deleted         integer,
+    description     text,
+    class           integer,
+    correct         text, -- used by atomic typos only
+    use             integer,
+    incorrect_forms text,
+    correct_forms   text,
+    see_also        text,
+    internal        integer,
+    verified        integer,
+    copyrighted     integer,
+    source          integer,
     foreign key (source) references sources(id)
+    foreign key (class)  references classes(id)
 );
 
 insert into classes (class) values("verb");
