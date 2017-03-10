@@ -119,6 +119,7 @@
                             [:li (tab-class :whitelist mode) [:a {:href (str url-prefix "whitelist")} "Whitelist"]]
                             [:li (tab-class :blacklist mode) [:a {:href (str url-prefix "blacklist")} "Blacklist"]]
                             [:li (tab-class :atomic-typos mode) [:a {:href (str url-prefix "atomic-typos")} "Atomic typos"]]
+                            [:li (tab-class :glossary mode) [:a {:href (str url-prefix "glossary")} "Glossary"]]
                         ]
                     ]
                 ] ; col-md-7 ends
