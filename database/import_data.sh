@@ -14,7 +14,7 @@
 
 DATABASE=zg.db
 
-cat database_dump_1.sql | sqlite3 ../${DATABASE}
-cat database_dump_2.sql | sqlite3 ../${DATABASE}
-cat atomic_typos.sql    | sqlite3 ../${DATABASE}
+cat dictionary_atomit_typos.sql | sqlite3 ../${DATABASE}
+cat dictionary_whitelist.sql    | sqlite3 ../${DATABASE}
+cat dictionary_blacklist.sql    | sqlite3 ../${DATABASE}
 

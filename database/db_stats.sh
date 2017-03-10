@@ -30,3 +30,6 @@ show_stat 'b'
 echo "Atomic typos"
 show_stat 'a'
 
+echo "Universal"
+show_stat 'u'
+
