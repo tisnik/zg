@@ -33,6 +33,7 @@
         :whitelist    "w"
         :blacklist    "b"
         :atomic-typos "a"
+        :glossary     "u"
                       "o"))
 
 (defn insert-word-into-dictionary
