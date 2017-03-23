@@ -194,3 +194,12 @@
             (log/error e "read sources")
             [])))
 
+(defn read-word-classes
+    []
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select id, class from classes order by class"])
+        (catch Exception e
+            (log/error e "read classes")
+            [])))
+
