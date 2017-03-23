@@ -17,4 +17,5 @@ DATABASE=zg.db
 cat dictionary_atomit_typos.sql | sqlite3 ../${DATABASE}
 cat dictionary_whitelist.sql    | sqlite3 ../${DATABASE}
 cat dictionary_blacklist.sql    | sqlite3 ../${DATABASE}
+cat dictionary_glossary.sql     | sqlite3 ../${DATABASE}
 
