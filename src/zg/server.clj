@@ -404,6 +404,7 @@
             "/users-atomic-typos"     (process-user-list     request title :atomic-typos)
             "/user-whitelist"         (process-user-info     request title :whitelist)
             "/user-blacklist"         (process-user-info     request title :blacklist)
+            "/user-glossary"          (process-user-info     request title :glossary)
             "/all-words/json"         (process-wordlist-json request nil)
             "/all-words/text"         (process-wordlist-text request nil)
             "/all-words/xml"          (process-wordlist-xml  request nil)
