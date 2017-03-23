@@ -183,29 +183,37 @@
                              (db-interface/read-words-for-pattern word :blacklist))]
         (finish-processing request search-results nil nil title emender-page :blacklist)))
 
+(defn sources->map
+    [sources]
+    (into '{}
+        (for [source sources] [(:id source) (:source source)])))
+
 (defn process-all-words
     "Read all words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-all-words mode)
-          sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page mode)))
+          sources        (db-interface/read-sources)
+          sources-map    (sources->map sources)]
+        (finish-processing request search-results sources-map nil title emender-page mode)))
 
 (defn process-deleted-words
     "Read all deleted words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-deleted-words mode)
-          sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page mode)))
+          sources        (db-interface/read-sources)
+          sources-map    (sources->map sources)]
+        (finish-processing request search-results sources-map nil title emender-page mode)))
 
 (defn process-active-words
     "Read all nondeleted words from the selected dictionary and display them to user on generated page."
     [request title emender-page mode]
     (perform-operation request mode)
     (let [search-results (db-interface/read-active-words mode)
-          sources        (db-interface/read-sources)]
-        (finish-processing request search-results sources nil title emender-page mode)))
+          sources        (db-interface/read-sources)
+          sources-map    (sources->map sources)]
+        (finish-processing request search-results sources-map nil title emender-page mode)))
 
 (defn read-changes-statistic
     []
@@ -364,6 +372,7 @@
             "/all-words-in-whitelist"     (process-all-words     request title emender-page :whitelist)
             "/all-words-in-blacklist"     (process-all-words     request title emender-page :blacklist)
             "/all-words-in-atomic-typos"  (process-all-words     request title emender-page :atomic-typos)
+            "/all-words-in-glossary"      (process-all-words     request title emender-page :glossary)
             "/active-words-in-whitelist"  (process-active-words  request title emender-page :whitelist)
             "/active-words-in-blacklist"  (process-active-words  request title emender-page :blacklist)
             "/active-words-in-atomic-typos"  (process-active-words     request title emender-page :atomic-typos)
