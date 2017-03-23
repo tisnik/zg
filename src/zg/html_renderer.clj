@@ -296,6 +296,7 @@
         ]
         [:br]
         [:br]
+        (comment
         (form/form-to [:post (str url-prefix "add-word-to-glossary")]
                 [:table {:style "border-collapse: separate; border-spacing: 10px;"}
                     [:tr [:td [:div {:class "_label _label-primary"} "New word:"]]
@@ -315,19 +316,34 @@
                          [:td (form/check-box "copyright")]]
                     [:tr [:td [:div {:class "_label _label-default"} "Source:"]]
                          [:td "&nbsp;"]
-                         [:td (form/drop-down "source" (map (fn [i] [(:source i)(:id i)]) sources) )]]
+                         [:td (form/drop-down "source" (map (fn [i] [(val i)(key i)]) sources) )]]
                     [:tr [:td "&nbsp;"]
                          [:td "&nbsp;"]
                          [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
-                [:br])
+                [:br]))
         [:br]])
+
+(defn yes-no
+    [key-name search-results]
+    (condp = (get search-results key-name)
+        1 "yes"
+        0 "no"
+          "N/A"))
 
 (defn yes-no-with-caution
     [key-name search-results]
     (condp = (get search-results key-name)
         1 "yes"
         0 "no"
-        2 "with caution"))
+        2 "with caution"
+          "N/A"))
+
+(defn get-source
+    [sources-map key-name search-results]
+    (let [source (get search-results key-name)]
+        (if source
+            (get sources-map (dec source))
+            "N/A")))
 
 (defn handle-null
     [key-name search-results]
@@ -335,11 +351,12 @@
 
 (defn render-front-page
     "Render front page of this application."
-    [word user-name search-results sources message url-prefix title emender-page mode]
+    [word user-name search-results sources-map message url-prefix title emender-page mode]
     (println user-name)
     (println url-prefix)
     (println title)
     (println mode)
+    (println (first search-results))
     (page/xhtml
         (render-html-header word url-prefix title)
         [:body
@@ -349,7 +366,7 @@
                 :whitelist    (render-front-page-for-whitelist word url-prefix emender-page mode)
                 :blacklist    (render-front-page-for-blacklist word url-prefix emender-page mode)
                 :atomic-typos (render-front-page-for-atomic-typos word url-prefix emender-page mode)
-                :glossary     (render-front-page-for-glossary word url-prefix emender-page mode sources)
+                :glossary     (render-front-page-for-glossary word url-prefix emender-page mode sources-map)
                 )
                 
                 (if message
@@ -383,9 +400,9 @@
                                          [:td (:description search-result)])
                                      [:td (handle-null :class search-result)]
                                      [:td (yes-no-with-caution :use search-result)]
-                                     [:td (handle-null :internal search-result)]
-                                     [:td (handle-null :copyright search-result)]
-                                     [:td (handle-null :source search-result)]
+                                     [:td (yes-no :internal search-result)]
+                                     [:td (yes-no :copyrighted search-result)]
+                                     [:td (get-source sources-map :source search-result)]
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-default"} "undelete"]
                                                       [:a {:href (str "?delete="   word) :class "btn btn-default"}  "delete"])]
