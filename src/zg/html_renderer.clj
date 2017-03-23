@@ -345,13 +345,20 @@
             (get sources-map (dec source))
             "N/A")))
 
+(defn get-class
+    [classes-map key-name search-results]
+    (let [class (get search-results key-name)]
+        (if class
+            (get classes-map class)
+            "N/A")))
+
 (defn handle-null
     [key-name search-results]
     (or (get search-results key-name) "N/A"))
 
 (defn render-front-page
     "Render front page of this application."
-    [word user-name search-results sources-map message url-prefix title emender-page mode]
+    [word user-name search-results sources-map classes-map message url-prefix title emender-page mode]
     (println user-name)
     (println url-prefix)
     (println title)
@@ -398,7 +405,7 @@
                                      [:td (user-href (:user search-result) mode)]
                                      (if (= mode :blacklist)
                                          [:td (:description search-result)])
-                                     [:td (handle-null :class search-result)]
+                                     [:td (get-class classes-map :class search-result)]
                                      [:td (yes-no-with-caution :use search-result)]
                                      [:td (yes-no :internal search-result)]
                                      [:td (yes-no :copyrighted search-result)]
