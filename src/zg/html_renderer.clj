@@ -322,9 +322,16 @@
                 [:br])
         [:br]])
 
+(defn yes-no-with-caution
+    [key-name search-results]
+    (condp = (get search-results key-name)
+        1 "yes"
+        0 "no"
+        2 "with caution"))
+
 (defn handle-null
-    [key search-results]
-    (or (get key search-results) "N/A"))
+    [key-name search-results]
+    (or (get search-results key-name) "N/A"))
 
 (defn render-front-page
     "Render front page of this application."
@@ -375,7 +382,7 @@
                                      (if (= mode :blacklist)
                                          [:td (:description search-result)])
                                      [:td (handle-null :class search-result)]
-                                     [:td (handle-null :use search-result)]
+                                     [:td (yes-no-with-caution :use search-result)]
                                      [:td (handle-null :internal search-result)]
                                      [:td (handle-null :copyright search-result)]
                                      [:td (handle-null :source search-result)]
@@ -396,6 +403,7 @@
         "b" "blacklist"
         "a" "atomic typos"
         "g" "glossary"
+        "u" "glossary"
             "unknown"))
 
 (defn render-users
