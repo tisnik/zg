@@ -384,14 +384,17 @@
                         [:tr [:th "Word"]
                              (if (= mode :atomic-typos)
                                  [:th "Correct form(s)"])
-                             [:th "Added at"]
-                             [:th "Added by"]
-                             (if (= mode :blacklist)
+                             (if (not= mode :glossary)
+                                 [:th "Added at"])
+                             (if (not= mode :glossary)
+                                 [:th "Added by"])
+                             (if (or (= mode :blacklist) (= mode :glossary))
                                  [:th "Description"])
                              [:th "Class"]
                              [:th "Use it"]
                              [:th "Internal"]
                              [:th "Copyright"]
+                             [:th "Verified"]
                              [:th "Source"]
                              [:th "Status"]
                              [:th "Operation"]]
@@ -401,14 +404,17 @@
                                 [:tr [:td word]
                                      (if (= mode :atomic-typos)
                                          [:td (:correct search-result)])
-                                     [:td (:datetime search-result)]
-                                     [:td (user-href (:user search-result) mode)]
-                                     (if (= mode :blacklist)
+                                     (if (not= mode :glossary)
+                                         [:td (:datetime search-result)])
+                                     (if (not= mode :glossary)
+                                         [:td (user-href (:user search-result) mode)])
+                                     (if (or (= mode :blacklist) (= mode :glossary))
                                          [:td (:description search-result)])
                                      [:td (get-class classes-map :class search-result)]
                                      [:td (yes-no-with-caution :use search-result)]
                                      [:td (yes-no :internal search-result)]
                                      [:td (yes-no :copyrighted search-result)]
+                                     [:td (yes-no :verified search-result)]
                                      [:td (get-source sources-map :source search-result)]
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-default"} "undelete"]
