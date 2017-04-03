@@ -27,10 +27,13 @@
 
 (defn store-word
     "Store one word into the dictionary."
-    [word correct-form description user-name dictionary-type]
+    ([word correct-form description user-name dictionary-type]
     (log/info "About to store following word:" word " with description: " description " and/or correct form: " correct-form
              " into dictionary: " (str dictionary-type))
     (db-interface/add-new-word-into-dictionary word correct-form description (or user-name "(*unknown*)") dictionary-type))
+    ([word description class use-it internal copyright source correct-forms incorrect-forms user-name dictionary-type]
+    (log/info "About to store following word:" word " with description: " description " into dictionary: " (str dictionary-type))
+    (db-interface/add-new-word-into-dictionary word description class use-it internal copyright source correct-forms incorrect-forms (or user-name "(*unknown*)") dictionary-type)))
 
 (defn store-words
     "Store sequence of words into the dictionary."
