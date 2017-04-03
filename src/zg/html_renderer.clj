@@ -296,7 +296,6 @@
         ]
         [:br]
         [:br]
-        (comment
         (form/form-to [:post (str url-prefix "add-word-to-glossary")]
                 [:table {:style "border-collapse: separate; border-spacing: 10px;"}
                     [:tr [:td [:div {:class "_label _label-primary"} "New word:"]]
@@ -320,7 +319,7 @@
                     [:tr [:td "&nbsp;"]
                          [:td "&nbsp;"]
                          [:td (form/submit-button {:class "btn btn-primary"} "Add new word")]]]
-                [:br]))
+                [:br])
         [:br]])
 
 (defn yes-no
