@@ -364,6 +364,10 @@
     [key-name search-results]
     (or (get search-results key-name) "N/A"))
 
+(defn get-correct-or-preffered-forms
+    [search-result]
+    (str (:incorrect_forms search-result) (:correct_forms search-result)))
+
 (defn render-front-page
     "Render front page of this application."
     [word user-name search-results sources-map classes-map message url-prefix title emender-page mode]
@@ -403,6 +407,8 @@
                              [:th "Internal"]
                              [:th "Copyright"]
                              [:th "Verified"]
+                             (if (= mode :glossary)
+                                 [:th "Incorrect/preffered forms"])
                              [:th "Source"]
                              [:th "Status"]
                              [:th "Operation"]]
@@ -423,6 +429,8 @@
                                      [:td (yes-no :internal search-result)]
                                      [:td (yes-no :copyrighted search-result)]
                                      [:td (yes-no :verified search-result)]
+                                     (if (= mode :glossary)
+                                         [:td (get-correct-or-preffered-forms search-result)])
                                      [:td (get-source sources-map :source search-result)]
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-default"} "undelete"]
