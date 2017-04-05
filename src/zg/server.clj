@@ -76,24 +76,6 @@
     (let [params         (:params request)]
         (finish-processing request nil nil nil nil title emender-page :whitelist)))
 
-(defn process-whitelist
-    "Function that prepares data for the whitelist front page."
-    [request title emender-page]
-    (let [params         (:params request)
-          word           (get params "word")
-          search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :whitelist))]
-        (finish-processing request search-results nil nil nil title emender-page :whitelist)))
-
-(defn process-blacklist
-    "Function that prepares data for the blacklist front page."
-    [request title emender-page]
-    (let [params         (:params request)
-          word           (get params "word")
-          search-results (if (not (empty? word))
-                             (db-interface/read-words-for-pattern word :blacklist))]
-        (finish-processing request search-results nil nil nil title emender-page :blacklist)))
-
 (defn process-atomic-typos
     "Function that prepares data for the Atomic typos front page."
     [request title emender-page]
@@ -193,6 +175,28 @@
               (db-interface/delete-word to-delete mode))
           (if to-undelete
               (db-interface/undelete-word to-undelete mode))))
+
+(defn process-whitelist
+    "Function that prepares data for the whitelist front page."
+    [request title emender-page]
+    ; perform the operation selected by user on the web UI (delete, undelete etc.)
+    (perform-operation request :whitelist)
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :whitelist))]
+        (finish-processing request search-results nil nil nil title emender-page :whitelist)))
+
+(defn process-blacklist
+    "Function that prepares data for the blacklist front page."
+    [request title emender-page]
+    ; perform the operation selected by user on the web UI (delete, undelete etc.)
+    (perform-operation request :whitelist)
+    (let [params         (:params request)
+          word           (get params "word")
+          search-results (if (not (empty? word))
+                             (db-interface/read-words-for-pattern word :blacklist))]
+        (finish-processing request search-results nil nil nil title emender-page :blacklist)))
 
 (defn process-all-words
     "Read all words from the selected dictionary and display them to user on generated page."
