@@ -404,6 +404,8 @@
                              [:th "Copyright"]
                              [:th "Verified"]
                              [:th "Source"]
+                             (if (= mode :glossary)
+                                 [:th "See also"])
                              [:th "Status"]
                              [:th "Operation"]]
                         (for [search-result search-results]
@@ -424,6 +426,8 @@
                                      [:td (yes-no :copyrighted search-result)]
                                      [:td (yes-no :verified search-result)]
                                      [:td (get-source sources-map :source search-result)]
+                                     (if (= mode :glossary)
+                                         [:td (:see_also search-result)])
                                      [:td {:style (if deleted "color:red" "color:green")} (if deleted "deleted" "active")]
                                      [:td (if deleted [:a {:href (str "?undelete=" word) :class "btn btn-default"} "undelete"]
                                                       [:a {:href (str "?delete="   word) :class "btn btn-default"}  "delete"])]
