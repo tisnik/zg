@@ -191,7 +191,7 @@
     "Function that prepares data for the blacklist front page."
     [request title emender-page]
     ; perform the operation selected by user on the web UI (delete, undelete etc.)
-    (perform-operation request :whitelist)
+    (perform-operation request :blacklist)
     (let [params         (:params request)
           word           (get params "word")
           search-results (if (not (empty? word))
