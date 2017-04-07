@@ -280,7 +280,7 @@
             "Glossary"
         ]
         [:br]
-        [:h1 {:style "color:red"} "Please note that this application is in the Proof of concept state"]
+        [:h1 {:style "color:red"} "This application is in the Proof of concept state"]
         [:br]
         [:div {:class "row"}
             [:div {:class "navbar-header"}
@@ -311,7 +311,7 @@
                          [:td (form/drop-down "class" ["N/A" "Noun" "Verb" "Adjective" "Adverb" "Pronoun" "Preposition" "Conjunction" "Determiner" "Exclamation"])]]
                     [:tr [:td [:div {:class "_label _label-default"} "Use it"]]
                          [:td "&nbsp;"]
-                         [:td (form/check-box "use-it")]]
+                         [:td (form/drop-down "class" ["Yes" "No" "With caution"])]]
                     [:tr [:td [:div {:class "_label _label-default"} "Internal:"]]
                          [:td "&nbsp;"]
                          [:td (form/check-box "internal")]]
@@ -366,7 +366,7 @@
     [key-name search-results]
     (or (get search-results key-name) "N/A"))
 
-(defn get-correct-or-preffered-forms
+(defn get-correct-or-preferred-forms
     [search-result]
     (str (:incorrect_forms search-result) (:correct_forms search-result)))
 
@@ -410,7 +410,7 @@
                              [:th "Copyright"]
                              [:th "Verified"]
                              (if (= mode :glossary)
-                                 [:th "Incorrect/preffered forms"])
+                                 [:th "Incorrect/preferred forms"])
                              [:th "Source"]
                              (if (= mode :glossary)
                                  [:th "See also"])
@@ -434,7 +434,7 @@
                                      [:td (yes-no :copyrighted search-result)]
                                      [:td (yes-no :verified search-result)]
                                      (if (= mode :glossary)
-                                         [:td (get-correct-or-preffered-forms search-result)])
+                                         [:td (get-correct-or-preferred-forms search-result)])
                                      [:td (get-source sources-map :source search-result)]
                                      (if (= mode :glossary)
                                          [:td (:see_also search-result)])
