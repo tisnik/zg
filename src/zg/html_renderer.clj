@@ -280,6 +280,8 @@
             "Glossary"
         ]
         [:br]
+        [:h1 {:style "color:red"} "Please note that this application is in the Proof of concept state"]
+        [:br]
         [:div {:class "row"}
             [:div {:class "navbar-header"}
                 [:a {:href (str url-prefix "all-words-in-glossary") :class "navbar-brand"} "All words"]
