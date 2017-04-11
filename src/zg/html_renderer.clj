@@ -311,7 +311,7 @@
                          [:td (form/drop-down "class" ["N/A" "Noun" "Verb" "Adjective" "Adverb" "Pronoun" "Preposition" "Conjunction" "Determiner" "Exclamation"])]]
                     [:tr [:td [:div {:class "_label _label-default"} "Use it"]]
                          [:td "&nbsp;"]
-                         [:td (form/drop-down "class" ["Yes" "No" "With caution"])]]
+                         [:td (form/drop-down "use_it" ["Yes" "No" "With caution"])]]
                     [:tr [:td [:div {:class "_label _label-default"} "Internal:"]]
                          [:td "&nbsp;"]
                          [:td (form/check-box "internal")]]
@@ -378,6 +378,7 @@
     (println title)
     (println mode)
     (println (first search-results))
+    (println sources-map)
     (page/xhtml
         (render-html-header word url-prefix title)
         [:body
