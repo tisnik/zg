@@ -49,6 +49,25 @@
                      :deleted     0
                      :description description}))
 
+(defn insert-word-into-glossary
+    "Try to insert new word into the dictionary. If insert fails, exception
+     is thrown and it needs to be caught outside this function."
+    [word description class use-it internal copyright source correct-forms incorrect-forms user-name dictionary-type datetime]
+    (jdbc/insert! db-spec/zg-db
+        :dictionary {:word       word
+                     :class      class
+                     :dictionary (dictionary-type->char dictionary-type)
+                     :use        use-it
+                     :internal   internal
+                     :copyrighted copyright
+                     :source     source
+                     :correct_forms correct-forms
+                     :incorrect_forms incorrect-forms
+                     :user       user-name
+                     :datetime   datetime
+                     :deleted     0
+                     :description description}))
+
 (defn add-new-word-into-dictionary
     "Add new word into the dictionary. If the word already exist, it is 
      simply updated (make sense only for blacklist)."
@@ -75,6 +94,17 @@
         (log/info "storing" datetime word)
         (try
             (insert-word-into-dictionary word correct-form description user-name dictionary-type datetime)
+            (catch Exception e
+                (try
+                    (jdbc/update! db-spec/zg-db
+                          :dictionary {:description description} ["word=?" word])
+                    (catch Exception e
+                        (log/error e "insert word into dictionary")))))))
+    ([word description class use-it internal copyright source correct-forms incorrect-forms user-name dictionary-type]
+    (let [datetime (format-date/format-current-date)]
+        (log/info "storing" datetime word)
+        (try
+            (insert-word-into-glossary word description class use-it internal copyright source correct-forms incorrect-forms user-name dictionary-type datetime)
             (catch Exception e
                 (try
                     (jdbc/update! db-spec/zg-db
