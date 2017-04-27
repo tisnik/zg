@@ -317,10 +317,20 @@
     (with-out-str
         (xml/emit {:tag :whitelist :content (for [word words]
                                              {:tag :word :attrs {
-                                                             :added-by     (:user word)
-                                                             :date-time    (:datetime word)
-                                                             :deleted      (:deleted word)
-                                                             :description  (:description word)}
+                                                             :added-by        (:user word)
+                                                             :date-time       (:datetime word)
+                                                             :deleted         (:deleted word)
+                                                             :description     (:description word)
+                                                             :class           (:class_name word)
+                                                             :source          (:source word)
+                                                             :product         (:product word)
+                                                             :use             (:use word)
+                                                             :correct_forms   (:correct_forms word)
+                                                             :incorrect_forms (:incorrect_forms word)
+                                                             :see_also        (:see_also word)
+                                                             :internal        (:internal word)
+                                                             :verified        (:verified word)
+                                                             :copyrighted     (:copyrighted word)}
                                                              :content      [(:word word)]})})))
 
 (defn words->edn
