@@ -135,24 +135,54 @@
     (if-let [parameter-value (-> (:params request) (get parameter-name))]
             (clojure.string/trim parameter-value)))
 
+(defn read-boolean-parameter
+    [request parameter-name]
+    (if-let [parameter-value (-> (:params request) (get parameter-name))]
+            (= "true" (clojure.string/trim parameter-value))
+            false))
+
+(defn read-integer-parameter
+    [request parameter-name]
+    (if-let [parameter-value (-> (:params request) (get parameter-name))]
+            (Integer/parseInt (clojure.string/trim parameter-value))))
+
 (defn process-add-word
     "Add word provided by user (together with its description) to the blacklist or into atomic typos."
     [request title emender-page mode]
-    (println request)
-    (let [word         (read-string-parameter request "new-word")
-          description  (read-string-parameter request "description")
-          correct-form (read-string-parameter request "correct-word")
-          word-class   (read-string-parameter request "class")
-          internal     (read-string-parameter request "internal")
-          copyright    (read-string-parameter request "copyright")
-          source       (read-string-parameter request "source")
-          proper-word  (dictionary-interface/proper-word-for-blacklist? word)
-          user-name    (get-user-name request)
-          message      (add-word-message word proper-word)
-          sources      (db-interface/read-sources)]
-          (if (and proper-word (seq word))
-              (dictionary-interface/store-word word correct-form description user-name mode))
-        (finish-processing request nil sources nil message title emender-page mode)))
+    (clojure.pprint/pprint (:params request))
+    (if (= mode :glossary)
+        (let [word            (read-string-parameter request "new-word")
+              description     (read-string-parameter request "description")
+              correct-forms   (read-string-parameter request "correct-forms")
+              incorrect-forms (read-string-parameter request "incorrect-forms")
+              internal        (read-boolean-parameter request "internal")
+              copyright       (read-boolean-parameter request "copyright")
+              source          (read-integer-parameter request "source")
+              class           (read-string-parameter request "class")
+              use-it          (read-string-parameter request "use_it")
+              user-name       (get-user-name request)
+              message         (add-word-message word true)
+              classes         (db-interface/read-word-classes)
+              classes-map     (classes->map classes)
+              sources         (db-interface/read-sources)
+              sources-map     (sources->map sources)]
+              (if (seq word)
+                  (dictionary-interface/store-word word description class use-it internal copyright source correct-forms incorrect-forms user-name :glossary))
+            (finish-processing request nil sources-map classes-map message title emender-page :glossary))
+        (let [word         (read-string-parameter request "new-word")
+              description  (read-string-parameter request "description")
+              correct-form (read-string-parameter request "correct-word")
+              word-class   (read-string-parameter request "class")
+              internal     (read-string-parameter request "internal")
+              copyright    (read-string-parameter request "copyright")
+              source       (read-string-parameter request "source")
+              proper-word  (dictionary-interface/proper-word-for-blacklist? word)
+              user-name    (get-user-name request)
+              message      (add-word-message word proper-word)
+              sources      (db-interface/read-sources)]
+              (if (and proper-word (seq word))
+                  (dictionary-interface/store-word word correct-form description user-name mode))
+            (finish-processing request nil sources nil message title emender-page mode))))
 
 (defn process-add-words
     [request title emender-page mode]
@@ -423,6 +453,11 @@
             "/blacklist/xml"          (process-wordlist-xml  request :blacklist)
             "/blacklist/edn"          (process-wordlist-edn  request :blacklist)
             "/blacklist/csv"          (process-wordlist-csv  request :blacklist)
+            "/glossary/json"          (process-wordlist-json request :glossary)
+            "/glossary/text"          (process-wordlist-text request :glossary)
+            "/glossary/xml"           (process-wordlist-xml  request :glossary)
+            "/glossary/edn"           (process-wordlist-edn  request :glossary)
+            "/glossary/csv"           (process-wordlist-csv  request :glossary)
             ;"/delete-word"           (process-delete-word   request)
             ;"/undelete-word"         (process-undelete-word request)
             )))
