@@ -309,7 +309,10 @@
 (defn words->text
     [words]
     (->> (for [word words :when (= (:deleted word) 0)]
-             (str (:word word) "\t" (:description word)))
+         (clojure.string/join "\t" [(:word word) (:description word) (:user word) (:datetime word)
+                                    (:class_name word) (:source_name word) (:product word)
+                                    (:use word) (:correct_forms word) (:incorrect_forms word)
+                                    (:see_also word) (:internal word) (:verified word) (:copyrighted word)]))
          (clojure.string/join "\n")))
 
 (defn words->xml
