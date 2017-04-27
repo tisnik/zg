@@ -141,10 +141,27 @@
     (try
         (if dictionary-type
             (jdbc/query db-spec/zg-db
-                ["select * from dictionary where dictionary=? order by word"
+                ["select word, description,
+                    class,
+                    source,
+                    (select class from classes where classes.id=dictionary.class) as class_name,
+                    use, incorrect_forms, correct_forms, see_also, internal, verified, copyrighted,
+                    (select source from sources where sources.id=dictionary.source-1) as source_name,
+                    (select product from products where products.id=dictionary.product) as product
+                  from dictionary
+                  where dictionary=?
+                  order by word"
                     (dictionary-type->char dictionary-type)])
             (jdbc/query db-spec/zg-db
-                ["select * from dictionary order by word"]))
+                ["select word, description,
+                    class,
+                    source,
+                    (select class from classes where classes.id=dictionary.class) as class_name,
+                    use, incorrect_forms, correct_forms, see_also, internal, verified, copyrighted,
+                    (select source from sources where sources.id=dictionary.source-1) as source_name,
+                    (select product from products where products.id=dictionary.product) as product
+                 from dictionary
+                    order by word"]))
         (catch Exception e
             (log/error e "read all words")
             [])))
