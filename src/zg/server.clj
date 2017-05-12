@@ -1,5 +1,5 @@
 ;
-;  (C) Copyright 2016  Pavel Tisnovsky
+;  (C) Copyright 2016, 2017  Pavel Tisnovsky
 ;
 ;  All rights reserved. This program and the accompanying materials
 ;  are made available under the terms of the Eclipse Public License v1.0
@@ -387,6 +387,13 @@
         (-> (http-response/response csv-output)
             (http-response/content-type "text/csv; charset=utf-8"))))
 
+(defn process-different-spelling-words
+    [request]
+    (let [search-results (db-interface/read-different-spelling-words)
+          json-output    (words->json search-results)]
+        (-> (http-response/response json-output)
+            (http-response/content-type "application/json"))))
+
 ;defn process-delete-word
 ;   [request]
 ;   )
@@ -471,6 +478,7 @@
             "/glossary/xml"           (process-wordlist-xml  request :glossary)
             "/glossary/edn"           (process-wordlist-edn  request :glossary)
             "/glossary/csv"           (process-wordlist-csv  request :glossary)
+            "/different-spelling-words/json" (process-different-spelling-words request)
             ;"/delete-word"           (process-delete-word   request)
             ;"/undelete-word"         (process-undelete-word request)
             )))
