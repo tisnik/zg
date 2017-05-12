@@ -224,6 +224,16 @@
             (log/error e "read changes")
             [])))
 
+(defn read-different-spelling-words
+    "Read all words that have different spelling."
+    []
+    (try
+        (jdbc/query db-spec/zg-db
+                        ["select word, count(word) cnt from dictionary d where dictionary='u' group by word having cnt>1"])
+        (catch Exception e
+            (log/error e "read different spelling words")
+            [])))
+
 (defn read-changes-for-user
     "Read all changes for selected user sorted by date and time the change has been made."
     [user-name]
