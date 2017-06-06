@@ -217,6 +217,7 @@
             "url-prefix/users-whitelist"    (users-href "url-prefix/" :whitelist)
             "url-prefix/users-blacklist"    (users-href "url-prefix/" :blacklist)
             "url-prefix/users-atomic-typos" (users-href "url-prefix/" :atomic-typos)
+            "url-prefix/users-glossary"     (users-href "url-prefix/" :glossary)
             nil                             (users-href "url-prefix/" :something-else))))
 
 (deftest test-remember-me-href
