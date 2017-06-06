@@ -147,6 +147,7 @@
             "whitelist"    :whitelist
             "blacklist"    :blacklist
             "atomic-typos" :atomic-typos
+            "glossary"     :glossary
             "whitelist"    :other
             "whitelist"    nil)))
 
