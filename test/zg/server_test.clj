@@ -267,3 +267,8 @@
             nil  {:something-else nil}
             nil  nil)))
 
+(deftest test-split-words-empty-input
+    "Check the function zg.server/split-words."
+    (testing "the function zg.server/split-words."
+        (is (nil? (split-words nil)))))
+
