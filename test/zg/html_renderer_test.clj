@@ -227,5 +227,6 @@
             "url-prefix/whitelist"    (remember-me-href "url-prefix/" :whitelist)
             "url-prefix/blacklist"    (remember-me-href "url-prefix/" :blacklist)
             "url-prefix/atomic-typos" (remember-me-href "url-prefix/" :atomic-typos)
+            "url-prefix/glossary"     (remember-me-href "url-prefix/" :glossary)
             nil                       (remember-me-href "url-prefix/" :something-else))))
 
