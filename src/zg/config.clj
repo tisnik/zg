@@ -11,35 +11,35 @@
 ;
 
 (ns zg.config
-    "Module that contains all functions required to to load configuration from the INI file.")
+  "Module that contains all functions required to to load configuration from the INI file.")
 
 (require '[clojure.pprint         :as pprint])
 (require '[clojure.tools.logging  :as log])
 (require '[clojure-ini.core       :as clojure-ini])
 
 (defn parse-int
-    "Parse the given string as an integer number."
-    [^String string]
-    (java.lang.Integer/parseInt string))
+  "Parse the given string as an integer number."
+  [^String string]
+  (java.lang.Integer/parseInt string))
 
 (defn parse-float
-    "Parse the given string as a float number."
-    [^String string]
-    (java.lang.Float/parseFloat string))
+  "Parse the given string as a float number."
+  [^String string]
+  (java.lang.Float/parseFloat string))
 
 (defn parse-boolean
-    "Parse the given string as a boolean value."
-    [^String string]
-    (or (= string "true")
-        (= string "True")))
+  "Parse the given string as a boolean value."
+  [^String string]
+  (or (= string "true")
+      (= string "True")))
 
 (defn load-configuration
-    "Load configuration from the provided INI file."
-    [^String ini-file-name]
-    (clojure-ini/read-ini ini-file-name :keywordize? true))
+  "Load configuration from the provided INI file."
+  [^String ini-file-name]
+  (clojure-ini/read-ini ini-file-name :keywordize? true))
 
 (defn print-configuration
-    "Print actual configuration to the output."
-    [configuration]
-    (pprint/pprint configuration))
+  "Print actual configuration to the output."
+  [configuration]
+  (pprint/pprint configuration))
 
