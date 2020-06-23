@@ -177,6 +177,7 @@
   ))
 
 (defn render-front-page-for-whitelist
+  "Render front page for whitelisted words."
   [word url-prefix emender-page mode]
   [:div {:class "container-fluid"}
    [:div {:class "row"}
@@ -209,6 +210,7 @@
    [:br]])
 
 (defn render-front-page-for-blacklist
+  "Render front page for blacklisted words."
   [word url-prefix emender-page mode]
   [:div {:class "container-fluid"}
    [:div {:class "row"}
@@ -262,6 +264,7 @@
    [:br]])
 
 (defn render-front-page-for-atomic-typos
+  "Render front page for atomic typos (words)."
   [word url-prefix emender-page mode]
   [:div {:class "container-fluid"}
    [:div {:class "row"}
@@ -301,6 +304,7 @@
    [:br]])
 
 (defn render-front-page-for-glossary
+  "Render front page for glossary."
   [word url-prefix emender-page mode sources]
   [:div {:class "container-fluid"}
    [:div {:class "row"}
@@ -364,21 +368,24 @@
    [:br]])
 
 (defn yes-no
+  "Transformation from 0/1 to 'yes' and 'no' strings."
   [key-name search-results]
   (condp = (get search-results key-name)
     1 "yes"
     0 "no"
-      "N/A"))
+      "N/A")) ; fallback
 
 (defn yes-no-with-caution
+  "Transformation from 0/1/2 to 'yes', 'no', and 'with caution' strings."
   [key-name search-results]
   (condp = (get search-results key-name)
     1 "yes"
     0 "no"
     2 "with caution"
-      "N/A"))
+      "N/A")) ; fallback
 
 (defn get-source
+  "Try to retrieve the source from search results."
   [sources-map key-name search-results]
   (let [source (get search-results key-name)]
     (if source
@@ -386,6 +393,7 @@
       "N/A")))
 
 (defn get-class
+  "Try to retrieve class from search results."
   [classes-map key-name search-results]
   (let [class (get search-results key-name)]
     (if class
@@ -393,10 +401,12 @@
       "N/A")))
 
 (defn handle-null
+  "Handle null/nil in nice way."
   [key-name search-results]
   (or (get search-results key-name) "N/A"))
 
 (defn get-correct-or-preferred-forms
+  "Get the correct or preffered forms."
   [search-result]
   (str (:incorrect_forms search-result) (:correct_forms search-result)))
 
@@ -476,6 +486,7 @@
   ))
 
 (defn dictionary-name
+  "Retrieve dictionary type according to the attribute taken from database."
   [dictionary-type]
   (condp = dictionary-type
     "w" "whitelist"
