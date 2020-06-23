@@ -24,6 +24,7 @@
 (require '[zg.dictionary-interface :as dictionary-interface])
 
 (defn get-user-name
+  "Retrieve user name from request."
   [request]
   (let [params        (:params request)
         cookies       (:cookies request)
@@ -36,24 +37,28 @@
     user-name))
 
 (defn get-title
+  "Get page title from configuration that is part of request."
   [request]
   (-> (:configuration request)
       :display
       :app-name))
 
 (defn get-emender-page
+  "Retrieve link to Emender page from configuration.."
   [request]
   (-> (:configuration request)
       :display
       :emender-page))
 
 (defn get-url-prefix
+  "Retrieve URL prefix from configuration."
   [request]
   (-> (:configuration request)
       :server
       :url-prefix))
 
 (defn finish-processing
+  "Finish processing of HTTP request."
   [request search-results sources classes message title emender-page mode]
   (let [params        (:params request)
         cookies       (:cookies request)
@@ -114,11 +119,13 @@
                        :atomic-typos)))
 
 (defn sources->map
+  "Provide mapping between source ID and source name."
   [sources]
   (into '{}
         (for [source sources] [(:id source) (:source source)])))
 
 (defn classes->map
+  "Provide mapping between class ID and class name."
   [classes]
   (into '{}
     (for [class classes] [(:id class) (:class class)])))
@@ -144,6 +151,7 @@
                        :glossary)))
 
 (defn add-word-message
+  "Message that new word has been added into the dictionary."
   [word proper-word]
   (if (seq word)
     (if proper-word
@@ -152,6 +160,7 @@
       "No word has been added..."))
 
 (defn add-words-message
+  "Message that new words has been added into the dictionary."
   [words]
   (if (seq words)
     (if (> (count words) 1)
@@ -160,18 +169,21 @@
     "No words have been added..."))
 
 (defn split-words
+  "Split input words."
   [input]
   (if input
     (->> (clojure.string/split input #"[\s,\n]")
          (filter seq))))
 
 (defn read-string-parameter
+  "Read string parameter from HTTP request."
   [request parameter-name]
   (if-let [parameter-value (-> (:params request)
                                (get parameter-name))]
     (clojure.string/trim parameter-value)))
 
 (defn read-boolean-parameter
+  "Read boolean parameter from HTTP request."
   [request parameter-name]
   (if-let [parameter-value (-> (:params request)
                                (get parameter-name))]
@@ -179,6 +191,7 @@
     false))
 
 (defn read-integer-parameter
+  "Read integer parameter from HTTP request."
   [request parameter-name]
   (if-let [parameter-value (-> (:params request)
                                (get parameter-name))]
@@ -251,6 +264,7 @@
                          mode))))
 
 (defn process-add-words
+  "Add words provided by user (together with its description) to the blacklist or into atomic typos."
   [request title emender-page mode]
   (let [input        (-> (:params request) (get "new-words"))
         words        (split-words input)
@@ -262,6 +276,7 @@
     (finish-processing request nil nil nil message title emender-page mode)))
 
 (defn perform-operation
+  "Perform the requested operation - delete or undelete."
   [request mode]
   (let [to-delete   (-> (:params request)
                         (get "delete"))
@@ -365,18 +380,22 @@
                        mode)))
 
 (defn read-changes-statistic
+  "Read statistic about changes from database."
   []
   (db-interface/read-changes-statistic))
 
 (defn read-changes
+  "Read all changes from database."
   []
   (db-interface/read-changes))
 
 (defn read-changes-for-user
+  "Read changes made by one user from database."
   [user-name]
   (db-interface/read-changes-for-user user-name))
 
 (defn process-user-list
+  "Prepare page with list of users."
   [request title mode]
   (let [changes-statistic (read-changes-statistic)
         changes           (read-changes)
@@ -402,6 +421,7 @@
           (http-response/content-type "text/html")))))
 
 (defn process-user-info
+  "Prepare page with info about one selected user."
   [request title mode]
   (let [params        (:params request)
         selected-user (get params "name")
@@ -425,10 +445,12 @@
 
 
 (defn words->json
+  "Convert all words into JSON format."
   [words]
   (json/write-str words))
 
 (defn words->text
+  "Convert all words into text."
   [words]
   (->>
     (for [word words
@@ -442,6 +464,7 @@
     (clojure.string/join "\n")))
 
 (defn words->xml
+  "Convert all words into XML format."
   [words]
   (with-out-str
     (xml/emit {:tag :whitelist,
@@ -464,21 +487,25 @@
                            :content [(:word word)]})})))
 
 (defn words->edn
+  "Convert all words into EDN format."
   [words]
   (with-out-str
     (clojure.pprint/pprint words)))
 
 (defn words->csv
+  "Convert all words into CSV format."
   [words]
   (with-out-str
     (csv/write-csv *out* words)))
 
 (defn words->vector
+  "Convert all words into vector."
   [words]
   (for [word words]
     (vals word)))
 
 (defn process-wordlist-json
+  "Prepare report with all words in JSON format."
   [request dictionary-type]
   (let [search-results (db-interface/read-all-words dictionary-type)
         json-output    (words->json search-results)]
@@ -486,6 +513,7 @@
         (http-response/content-type "application/json"))))
 
 (defn process-wordlist-text
+  "Prepare report with all words in plain text format."
   [request dictionary-type]
   (let [search-results (db-interface/read-all-words dictionary-type)
         text-output    (words->text search-results)]
@@ -493,6 +521,7 @@
         (http-response/content-type "text/plain"))))
 
 (defn process-wordlist-xml
+  "Prepare report with all words in XML format."
   [request dictionary-type]
   (let [search-results (db-interface/read-all-words dictionary-type)
         xml-output     (words->xml search-results)]
@@ -500,6 +529,7 @@
         (http-response/content-type "text/xml"))))
 
 (defn process-wordlist-edn
+  "Prepare report with all words in EDN format."
   [request dictionary-type]
   (let [search-results (db-interface/read-all-words dictionary-type)
         edn-output     (words->edn search-results)]
@@ -507,6 +537,7 @@
         (http-response/content-type "application/edn"))))
 
 (defn process-wordlist-csv
+  "Prepare report with all words in CSV format."
   [request dictionary-type]
   (let [search-results (db-interface/read-all-words dictionary-type)
         words          (words->vector search-results)
@@ -515,6 +546,7 @@
         (http-response/content-type "text/csv; charset=utf-8"))))
 
 (defn process-different-spelling-words
+  "Prepare report with different spelled words in JSON format."
   [request]
   (let [search-results (db-interface/read-different-spelling-words)
         json-output    (words->json search-results)]
