@@ -18,14 +18,17 @@
 (require '[zg.db-interface         :as db-interface])
 
 (defn proper-word-for-blacklist?
+  "Check if the input string is a proper word to be blacklisted."
   [word]
   (re-matches #"[A-Za-z0-9.'\-\s_/]+" word))
 
 (defn proper-word-for-whitelist?
+  "Check if the input string is a proper word to be whitelisted"
   [word]
   (re-matches #"[A-Za-z0-9.'\-\s_]+" word))
 
 (defn process-use-it
+  "Input string should contain just 'Yes' or 'No' answer taken from database."
   [use-it]
   (condp = use-it
       "Yes" 1
@@ -33,22 +36,23 @@
             2))
 
 (defn process-class
+  "Put a proper class ID to input word class."
   [class]
   (condp = (.toLowerCase class)
-    "N/A" nil
-    "n/a" nil
-    "verb" 1
-    "noun" 2
-    "adverb" 3
-    "adjective" 4
-    "pronoun" 5
-    "conjunction" 6
-    "preposition" 7
-    "interjection" 8
-    "article" 9
-    "numeral" 10
-    "determiner" 11
-    "exclamation" 12))
+    "N/A"           nil
+    "n/a"           nil
+    "verb"          1
+    "noun"          2
+    "adverb"        3
+    "adjective"     4
+    "pronoun"       5
+    "conjunction"   6
+    "preposition"   7
+    "interjection"  8
+    "article"       9
+    "numeral"      10
+    "determiner"   11
+    "exclamation"  12))
 
 (defn store-word
   "Store one word into the dictionary."
