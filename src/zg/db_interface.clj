@@ -266,6 +266,7 @@
          [])))
 
 (defn read-sources
+  "Read list of all sources from database."
   []
   (try (jdbc/query db-spec/zg-db
                    ["select id, source from sources order by source"])
@@ -274,6 +275,7 @@
          [])))
 
 (defn read-word-classes
+  "Read list of all word classes from database."
   []
   (try (jdbc/query db-spec/zg-db
                    ["select id, class from classes order by class"])
